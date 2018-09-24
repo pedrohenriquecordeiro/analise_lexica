@@ -41,6 +41,8 @@ public class Tag {
             MENOR       = 23,
             MAIOR_IGUAL = 24,
             MENOR_IGUAL = 25,
-            DIF         = 26;
+            DIF         = 26,
+    
+            ID          = 27;
             
 }

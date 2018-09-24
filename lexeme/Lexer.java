@@ -69,6 +69,41 @@ public class Lexer {
                     return new Token('=');
                 }
         }
+        
+        //numero
+        if(Character.isDigit(this.ch)){
+            int value = 0;
+            do{
+                value = 10*value + Character.digit(this.ch, 10);
+                readch();
+            }while(Character.isDigit(this.ch));
+            return new Num(value);
+ 
+        }
+        
+        //identificadores
+        if(Character.isLetter(this.ch)){
+            StringBuffer stringBuffer = new StringBuffer();
+            do{
+                stringBuffer.append(this.ch);
+                readch();
+            }while(Character.isLetterOrDigit(this.ch));
+            
+            String string = stringBuffer.toString();
+            Word word = (Word)words.get(string);
+            if(word != null){
+                return word;
+            }else{
+                word = new Word(string,Tag.ID);
+                words.put(string,word);
+                return word;
+            }
+            
+        }
+        
+        Token token = new Token(this.ch);
+        this.ch = ' ';
+        return token;
     }
     
 }
