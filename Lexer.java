@@ -80,6 +80,7 @@ public class Lexer {
                 }else{
                     return Word.equal;
                 }
+                
             case '<':
                 readch();
                 switch(this.ch){
@@ -90,6 +91,7 @@ public class Lexer {
                     default:
                         return Word.less_than;
                 } 
+                
             case ';':
                 return Word.semicolon;
                 
