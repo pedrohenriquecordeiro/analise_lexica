@@ -46,6 +46,7 @@ public class Lexer {
     }
     
     private void readch() throws IOException{
+        System.out.println("atual > " + this.ch);
         this.ch = (char) file.read();
     }
     
@@ -73,30 +74,27 @@ public class Lexer {
             }
         }
         
-        switch(this.ch){
-            case '=':
-                if(readch('=')){
-                    return Word.comparation;
-                }else{
-                    return Word.equal;
-                }
-                
-            case '<':
-                readch();
-                switch(this.ch){
-                    case '>':
-                        return Word.diff;
-                    case '=':
-                        return Word.less_equal;
-                    default:
-                        return Word.less_than;
-                } 
-                
-            case ';':
-                return Word.semicolon;
-                
+        System.out.println("operadores");
+        //operadores    
+        if(this.ch == '='){
+            // erro aqui
+            // por algum motivo o IF nao controla e os dois println sao mostrados
+            readch();
+            if(this.ch == '='){
+                System.out.println("comparation");
+                return Word.comparation;
+            }else{
+                System.out.println("equal");
+                return Word.equal;
+            }
+            
+        }else if(this.ch == ';'){
+            
+            return Word.semicolon;
+            
         }
-        
+       
+        System.out.println("Numeros");
         //numero
         if(Character.isDigit(this.ch)){
             int value = 0;
