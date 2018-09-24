@@ -1,6 +1,5 @@
-package lexeme;
 
-import arquivo.CodigoFonte;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -12,7 +11,7 @@ import java.util.logging.Logger;
  * @author pedro henrique cordeiro
  *
  */
-public class Lexeme {
+public class Main {
 
     public static void main(String[] args) {
         try {
@@ -36,9 +35,9 @@ public class Lexeme {
          
             
         } catch (FileNotFoundException e1) {
-            Logger.getLogger(Lexeme.class.getName()).log(Level.SEVERE, null, e1);
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e1);
         }catch(IOException e2){
-            Logger.getLogger(Lexeme.class.getName()).log(Level.SEVERE, null, e2);  
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e2);  
         }
         
     }
