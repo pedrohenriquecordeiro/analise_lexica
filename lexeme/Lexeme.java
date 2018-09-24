@@ -31,17 +31,9 @@ public class Lexeme {
             System.out.println(token.toString());
             token = lexer.scan();
             System.out.println(token.toString());
-            token = lexer.scan();
-            System.out.println(token.toString());
-            token = lexer.scan();
-            System.out.println(token.toString());
+           
             
-            
-            
-            
-            
-            
-            
+         
             
         } catch (FileNotFoundException e1) {
             Logger.getLogger(Lexeme.class.getName()).log(Level.SEVERE, null, e1);

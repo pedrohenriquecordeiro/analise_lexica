@@ -58,8 +58,7 @@ public class Lexer {
         }
     }
     
-    public Token scan() throws IOException{
-        
+    public Token scan() throws IOException{ 
         //desconsidera delimitadores na entrada
         for(;;readch()){
             if(this.ch == ' ' ||
@@ -77,10 +76,23 @@ public class Lexer {
         switch(this.ch){
             case '=':
                 if(readch('=')){
-                    return Word.equal;
+                    return Word.comparation;
                 }else{
-                    return new Token('=');
+                    return Word.equal;
                 }
+            case '<':
+                readch();
+                switch(this.ch){
+                    case '>':
+                        return Word.diff;
+                    case '=':
+                        return Word.less_equal;
+                    default:
+                        return Word.less_than;
+                } 
+            case ';':
+                return Word.semicolon;
+                
         }
         
         //numero

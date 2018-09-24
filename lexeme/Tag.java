@@ -41,18 +41,22 @@ public class Tag {
             // /
             DIV             = 20,
             // ==
-            EQUAL           = 21,
+            COMPARATION     = 21,
             // >
             GREATHER_THAN   = 22,
             // <
             LESS_THAN       = 23,
             // >=
-            GREATHER_EQUAL   = 24,
+            GREATHER_EQUAL  = 24,
             // <=
             LESS_EQUAL      = 25,
             //!=
             DIFF            = 26,
-    
-            ID              = 27;
+            // ;
+            SEMICOLON       = 27,
+            // =
+            EQUAL           = 28,
+            
+            ID              = 29;
             
 }
