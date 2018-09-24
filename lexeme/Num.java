@@ -10,15 +10,15 @@ package lexeme;
  * @author pedro
  */
 public class Num extends Token{
-    public int valor;
+    public int value;
 
-    public Num(int valor) {
+    public Num(int value) {
         super(Tag.NUM);
-        this.valor = valor;
+        this.value = value;
     }
     
     public String toString(){
-        return "" + valor;
+        return "" + value;
     }
     
 }
