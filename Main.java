@@ -20,17 +20,19 @@ public class Main {
             
             
             
-            Token token = lexer.scan();
-            System.out.println(token.toString());
-            token = lexer.scan();
-            System.out.println(token.toString());
-            token = lexer.scan();
-            System.out.println(token.toString());
-            token = lexer.scan();
-            System.out.println(token.toString());
-            token = lexer.scan();
-            System.out.println(token.toString());
-           
+            Token token;
+            String token_str;
+            int numero_token = 0;
+            
+            do{
+                numero_token++;
+                if(numero_token >= 50){
+                    break;
+                }
+                token = lexer.scan();
+                token_str = token.toString();
+                System.out.println(token_str);
+            }while(!token_str.equals("65535"));
             
          
             

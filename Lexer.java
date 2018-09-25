@@ -4,10 +4,11 @@
  * and open the template in the editor.
  */
 
-
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Hashtable;
 
 /**
@@ -15,121 +16,130 @@ import java.util.Hashtable;
  * @author pedro
  */
 public class Lexer {
+
     public static int line = 1;
     private char ch = ' ';
-    private FileReader file;
-    
+    private File file;
+    private RandomAccessFile randomAccessFile;
+
     private Hashtable words = new Hashtable();
-    
-    public Lexer(String fileName) throws FileNotFoundException{
-        this.file = new FileReader(fileName);
-        
+
+    public Lexer(String fileName) throws FileNotFoundException {
+        this.file = new File(fileName);
+        this.randomAccessFile = new RandomAccessFile(this.file,"r");
+
         //insere palavras reservadas na hashtable
-        reserve(new Word("start",Tag.START));
-        reserve(new Word("exit",Tag.EXIT));
-        reserve(new Word("int",Tag.INT));
-        reserve(new Word("float",Tag.FLOAT));
-        reserve(new Word("if",Tag.IF));
-        reserve(new Word("then",Tag.THEN));
-        reserve(new Word("else",Tag.ELSE));
-        reserve(new Word("end",Tag.END));
-        reserve(new Word("do",Tag.DO));
-        reserve(new Word("while",Tag.WHILE));
-        reserve(new Word("end",Tag.END));
-        reserve(new Word("scan",Tag.SCAN));
-        reserve(new Word("print",Tag.PRINT));
+        reserve(new Word("start", Tag.START));
+        reserve(new Word("exit", Tag.EXIT));
+        reserve(new Word("int", Tag.INT));
+        reserve(new Word("float", Tag.FLOAT));
+        reserve(new Word("if", Tag.IF));
+        reserve(new Word("then", Tag.THEN));
+        reserve(new Word("else", Tag.ELSE));
+        reserve(new Word("end", Tag.END));
+        reserve(new Word("do", Tag.DO));
+        reserve(new Word("while", Tag.WHILE));
+        reserve(new Word("end", Tag.END));
+        reserve(new Word("scan", Tag.SCAN));
+        reserve(new Word("print", Tag.PRINT));
     }
-    
-    
-    private void reserve(Word word){
-        this.words.put(word.getLexeme(),word);
+
+    private void reserve(Word word) {
+        this.words.put(word.getLexeme(), word);
     }
-    
-    private void readch() throws IOException{
-        System.out.println("atual > " + this.ch);
-        this.ch = (char) file.read();
+
+    private void readch() throws IOException {
+        this.ch = (char) randomAccessFile.read();
     }
-    
-    private boolean readch(char character) throws IOException{
+
+    private boolean readch(char character) throws IOException {
         readch();
-        if(this.ch != character){
+        if (this.ch != character) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
-    
-    public Token scan() throws IOException{ 
+
+    public Token scan() throws IOException {
         //desconsidera delimitadores na entrada
-        for(;;readch()){
-            if(this.ch == ' ' ||
-                    this.ch == '\t'||
-                        this.ch == '\r'||
-                            this.ch == '\b'){
+        do {
+            readch();
+            if (this.ch == ' '
+                    || this.ch == '\t'
+                    || this.ch == '\r'
+                    || this.ch == '\b') {
                 continue;
-            }else if( this.ch == '\n' ){
+            } else if (this.ch == '\n') {
                 this.line++;
-            }else{
+            } else {
                 break;
             }
-        }
+        } while (true);
         
-        System.out.println("operadores");
+
         //operadores    
-        if(this.ch == '='){
-            // erro aqui
-            // por algum motivo o IF nao controla e os dois println sao mostrados
-            readch();
-            if(this.ch == '='){
-                System.out.println("comparation");
-                return Word.comparation;
-            }else{
-                System.out.println("equal");
-                return Word.equal;
-            }
-            
-        }else if(this.ch == ';'){
-            
-            return Word.semicolon;
-            
+        switch (this.ch) {
+            case '=':
+                if (readch('=')) {
+                    return Word.comparation;
+                } else {
+                    return Word.equal;
+                }
+
+            case ';':
+                return Word.semicolon;
+
+            case '&':
+                if (readch('&')) {
+                    return Word.and;
+                } else {
+                    return new Token(this.ch);
+                }
         }
-       
-        System.out.println("Numeros");
+
         //numero
-        if(Character.isDigit(this.ch)){
+        if (Character.isDigit(this.ch)) {
             int value = 0;
-            do{
-                value = 10*value + Character.digit(this.ch, 10);
+            do {
+                value = 10 * value + Character.digit(this.ch, 10);
                 readch();
-            }while(Character.isDigit(this.ch));
+            } while (Character.isDigit(this.ch));
+            
+            // retorna UMA posicao no arquivo
+            long posicaoCorrentePonteiro = this.randomAccessFile.getFilePointer();
+            this.randomAccessFile.seek( posicaoCorrentePonteiro - 1 );
+            
             return new Num(value);
- 
         }
-        
+
         //identificadores
-        if(Character.isLetter(this.ch)){
+        if (Character.isLetter(this.ch)) {
             StringBuffer stringBuffer = new StringBuffer();
-            do{
+            do {
                 stringBuffer.append(this.ch);
                 readch();
-            }while(Character.isLetterOrDigit(this.ch));
+            } while (Character.isLetterOrDigit(this.ch));
             
+            // retorna UMA posicao no arquivo
+            long posicaoCorrentePonteiro = this.randomAccessFile.getFilePointer();
+            this.randomAccessFile.seek( posicaoCorrentePonteiro - 1 );
+
             String string = stringBuffer.toString();
-            Word word = (Word)words.get(string);
-            
-            if(word != null){
+            Word word = (Word) words.get(string);
+
+            if (word != null) {
                 return word;
-            }else{
-                word = new Word(string,Tag.ID);
-                words.put(string,word);
+            } else {
+                word = new Word(string, Tag.ID);
+                words.put(string, word);
                 return word;
             }
-            
         }
-        
+
         Token token = new Token(this.ch);
         this.ch = ' ';
         return token;
     }
-    
+
 }
