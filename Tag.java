@@ -62,10 +62,13 @@ public class Tag {
             // '.'
             DOT             = 33,
             // contante literal            
-            LITERAL           = 34,
+            LITERAL         = 34,
             // contantes numericas
-            NUM             = 35,
+            INTEGER         = 35,
+            FLOATING        = 36,
             // identificadores
-            ID              = 36;
+            ID              = 37;
+    
+    
             
 }

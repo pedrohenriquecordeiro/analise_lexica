@@ -21,14 +21,16 @@ public class Lexer {
     private char ch = ' ';
     private File file;
     private RandomAccessFile randomAccessFile;
+    StringBuffer stringBuffer ;
 
     private Hashtable words = new Hashtable();
 
     public Lexer(String fileName) throws FileNotFoundException {
         this.file = new File(fileName);
         this.randomAccessFile = new RandomAccessFile(this.file, "r");
-
-        //insere palavras reservadas na hashtable
+        this.stringBuffer = new StringBuffer();
+        
+        //inserindo palavras reservadas na hashtable
         reserve(new Word("start", Tag.START , "START"));
         reserve(new Word("exit", Tag.EXIT,"EXIT"));
         reserve(new Word("int", Tag.INT,"INT"));
@@ -96,10 +98,22 @@ public class Lexer {
                 return Word.comma;
 
             case '.':
-                return Word.dot;
+                this.stringBuffer.delete(0, stringBuffer.length());
+                stringBuffer.append(this.ch);
+                while(true){
+                    readch();
+                    if(!Character.isDigit(this.ch)){
+                        break;
+                    }else{
+                        stringBuffer.append(this.ch);
+                    }
+                }
+                ComeBackOne();
+                return new FloatNum( Float.parseFloat(stringBuffer.toString()) ,Tag.FLOATING,"FLOATING");
+                
 
             case '"':
-                StringBuffer stringBuffer = new StringBuffer();
+                this.stringBuffer.delete(0, stringBuffer.length());
                 while(true){
                     readch();
                     if(this.ch == '"'){
@@ -154,22 +168,26 @@ public class Lexer {
                 return Word.close_c;
         }
 
-        //numero
+        // constante numericas
         if (Character.isDigit(this.ch)) {
-            int value = 0;
+             stringBuffer.delete(0, stringBuffer.length());
             do {
-                value = 10 * value + Character.digit(this.ch, 10);
+                stringBuffer.append(this.ch);
                 readch();
-            } while (Character.isDigit(this.ch));
-
+            } while (Character.isDigit(this.ch) || this.ch == '.');
+            
             ComeBackOne();
-
-            return new Num(value,"NUM");
+            
+            if(stringBuffer.lastIndexOf(".") == -1 ){
+                return new IntegerNum(Integer.parseInt(stringBuffer.toString()) , Tag.INTEGER , "INTEGER");
+            }else{
+                return new FloatNum(Float.parseFloat(stringBuffer.toString()) , Tag.FLOATING , "FLOATING");
+            }
         }
 
         //identificadores
         if (Character.isLetter(this.ch)) {
-            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.delete(0, stringBuffer.length());
             do {
                 stringBuffer.append(this.ch);
                 readch();
