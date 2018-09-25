@@ -21,18 +21,19 @@ public class Main {
             
             
             Token token;
-            String token_str;
+            String token_str,token_name;
             int numero_token = 0;
             
             do{
                 numero_token++;
-                if(numero_token >= 50){
+                if(numero_token >= 500){
                     break;
                 }
                 token = lexer.scan();
+                token_name = token.getName();
                 token_str = token.toString();
-                System.out.println(token_str);
-            }while(!token_str.equals("65535"));
+                System.out.println(token_str + " : " + token_name);
+            }while(!token_name.equals("EXIT"));
             
          
             

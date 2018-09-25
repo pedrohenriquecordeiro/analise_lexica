@@ -1,47 +1,44 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 /**
  *
  * @author pedro
  */
 public class Tag {
     public final static int 
-            
             // palavras reservadas
-            START           = 1,
             EXIT            = 0,
+            START           = 1,
+            // tipos
             INT             = 2,
             FLOAT           = 3,
             STRING          = 4,
+            // controle de fluxo
             IF              = 5,
             THEN            = 6,
             ELSE            = 7,
             END             = 8,
+            // repeticao
             DO              = 9,
             WHILE           = 10,
+            // IO
             SCAN            = 11,
             PRINT           = 12,
+            // booleanos
             NOT             = 13,
             OR              = 14,
             AND             = 15,
-            
             //operadores
-            NUM             = 16,
             // +
-            SUM             = 17,
+            SUM             = 16,
             // -
-            SUB             = 18,
+            MINUS           = 17,
             // * 
-            MULT            = 19,
+            MULT            = 18,
             // /
-            DIV             = 20,
+            DIV             = 19,
             // ==
-            COMPARATION     = 21,
+            COMPARATION     = 20,
+            // =
+            EQUAL           = 21,
             // >
             GREATHER_THAN   = 22,
             // <
@@ -50,13 +47,25 @@ public class Tag {
             GREATHER_EQUAL  = 24,
             // <=
             LESS_EQUAL      = 25,
-            //!=
+            // <>
             DIFF            = 26,
             // ;
             SEMICOLON       = 27,
-            // =
-            EQUAL           = 28,
-            
-            ID              = 29;
+            // ,
+            COMMA           = 28,
+            // (  )
+            OPEN_PAR        = 29,
+            CLOSE_PAR       = 30,
+            // {  }
+            OPEN_C          = 31,
+            CLOSE_C         = 32,
+            // '.'
+            DOT             = 33,
+            // contante literal            
+            LITERAL           = 34,
+            // contantes numericas
+            NUM             = 35,
+            // identificadores
+            ID              = 36;
             
 }

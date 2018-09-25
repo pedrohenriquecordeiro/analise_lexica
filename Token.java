@@ -11,12 +11,23 @@
  */
 public class Token {
     public final int tag;
+    public final String name;
     
     public Token(int tag){
         this.tag = tag;
+        this.name = "";
+    }
+    
+    public Token(int tag,String name){
+        this.tag = tag;
+        this.name = name;
     }
     
     public String toString(){
         return "" + this.tag;
+    }
+    
+    public String getName(){
+        return this.name;
     }
 }

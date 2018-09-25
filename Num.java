@@ -17,6 +17,11 @@ public class Num extends Token{
         this.value = value;
     }
     
+    public Num(int value,String name) {
+        super(Tag.NUM,name);
+        this.value = value;
+    }
+    
     public String toString(){
         return "" + value;
     }
