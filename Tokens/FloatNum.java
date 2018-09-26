@@ -1,3 +1,5 @@
+package Tokens;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,35 +10,34 @@
  *
  * @author pedro
  */
-public class IntegerNum extends Token {
-
-    private final int value;
+public class FloatNum extends Token {
     
-     public IntegerNum(int value) {
+    private final float value;
+    
+     public FloatNum(float value) {
         // considera que o valor nesse caso eh float
         super(Tag.FLOATING);
         this.value = value;
 
     }
 
-    public IntegerNum(int value, int tag) {
+    public FloatNum(float value, int tag) {
         super(tag);
         this.value = value;
     }
 
-    public IntegerNum(int value, int tag, String name) {
+    public FloatNum(float value, int tag, String name) {
         super(tag, name);
         this.value = value;
     }
 
-    public int getValue() {
+    public float getValue() {
         return this.value;
     }
     
     public String toString(){
         return "" + this.value;
     }
-    
     
     
 }

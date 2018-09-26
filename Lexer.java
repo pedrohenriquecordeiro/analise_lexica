@@ -4,6 +4,13 @@
  * and open the template in the editor.
  */
 
+import Table_of_Symbols.Env;
+import Tokens.Symbol;
+import Tokens.Tag;
+import Tokens.Token;
+import Tokens.IntegerNum;
+import Tokens.FloatNum;
+import Tokens.Word;
 import com.sun.xml.internal.ws.util.StringUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,11 +32,14 @@ public class Lexer {
     StringBuffer stringBuffer;
 
     private Hashtable words = new Hashtable();
+    
+    private Env env;
 
     public Lexer(String fileName) throws FileNotFoundException {
         this.file = new File(fileName);
         this.randomAccessFile = new RandomAccessFile(this.file, "r");
         this.stringBuffer = new StringBuffer();
+        this.env = new Env(null);
 
         //inserindo palavras reservadas na hashtable
         reserve(new Word("start", Tag.START, "START"));
@@ -51,7 +61,7 @@ public class Lexer {
     }
 
     private void reserve(Word word) {
-        this.words.put(word.getLexeme(), word);
+        this.words.put(word.toString(), word);
     }
 
     private void readch() throws IOException {
@@ -87,19 +97,19 @@ public class Lexer {
         switch (this.ch) {
             case '=':
                 if (readch('=')) {
-                    return Word.comparation;
+                    return Symbol.comparation;
                 } else {
-                    return Word.equal;
+                    return Symbol.equal;
                 }
 
             case ';':
-                return Word.semicolon;
+                return Symbol.semicolon;
 
             case ',':
-                return Word.comma;
+                return Symbol.comma;
 
             case '.':
-                return Word.dot;
+                return Symbol.dot;
 
             case '"':
                 this.stringBuffer.delete(0, stringBuffer.length());
@@ -111,49 +121,49 @@ public class Lexer {
                         stringBuffer.append(this.ch);
                     }
                 }
-                return new Word(stringBuffer.toString(), Tag.LITERAL, "LITERAL");
+                return new Symbol(stringBuffer.toString(), Tag.LITERAL, "LITERAL");
 
             case '>':
                 readch();
                 if (this.ch == '=') {
-                    return Word.greather_equal;
+                    return Symbol.greather_equal;
                 } else {
-                    return Word.greather_than;
+                    return Symbol.greather_than;
                 }
 
             case '<':
                 readch();
                 if (this.ch == '>') {
-                    return Word.diff;
+                    return Symbol.diff;
                 } else if (this.ch == '=') {
-                    return Word.less_equal;
+                    return Symbol.less_equal;
                 } else {
-                    return Word.less_than;
+                    return Symbol.less_than;
                 }
 
             case '+':
-                return Word.sum;
+                return Symbol.sum;
 
             case '-':
-                return Word.minus;
+                return Symbol.minus;
 
             case '*':
-                return Word.mult;
+                return Symbol.mult;
 
             case '/':
-                return Word.div;
+                return Symbol.div;
 
             case '(':
-                return Word.open_par;
+                return Symbol.open_par;
 
             case ')':
-                return Word.close_par;
+                return Symbol.close_par;
 
             case '{':
-                return Word.open_c;
+                return Symbol.open_c;
 
             case '}':
-                return Word.close_c;
+                return Symbol.close_c;
         }
 
         // constante numericas
@@ -178,7 +188,7 @@ public class Lexer {
 
         }
 
-        //identificadores
+        //identificadore ou palavras reservadas
         if (Character.isLetter(this.ch)) {
             this.stringBuffer.delete(0, this.stringBuffer.length());
             do {
@@ -195,7 +205,8 @@ public class Lexer {
                 return word;
             } else {
                 word = new Word(string, Tag.ID, "ID");
-                words.put(string, word);
+                // insere identificador na tabela de simbolos
+                this.env.put(word,string);
                 return word;
             }
         }

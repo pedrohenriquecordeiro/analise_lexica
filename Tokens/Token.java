@@ -1,3 +1,5 @@
+package Tokens;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,24 +12,14 @@
  * @author pedro
  */
 public class Token {
-    public final String name;
-    public final int tag;
+    public final String tag;
 
-    public Token(int tag){
+    public Token(String tag){
         this.tag = tag;
-        this.name = "";
     }
     
-    public Token(int tag,String name){
-        this.tag = tag;
-        this.name = name;
-    }
     
     public String toString(){
-        return "" + this.tag;
-    }
-    
-    public String getName(){
-        return this.name;
+        return this.tag;
     }
 }
