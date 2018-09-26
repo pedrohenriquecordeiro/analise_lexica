@@ -44,10 +44,6 @@ public class Main {
         }catch(IOException e2){
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e2);  
         }
-        
-        
-        
-        
     }
 
 }

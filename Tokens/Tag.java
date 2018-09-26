@@ -71,7 +71,8 @@ public class Tag {
             // identificadores
             ID              = "ID",
             // token desconhecido
-            UNKNOWN         = "UNKNOWN";
+            UNKNOWN         = "UNKNOWN",
+            COMMENT         = "COMMENT";
     
     
             

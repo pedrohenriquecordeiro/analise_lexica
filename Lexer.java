@@ -122,7 +122,7 @@ public class Lexer {
                         stringBuffer.append(this.ch);
                     }
                 }
-                return new Word(stringBuffer.toString(), Tag.LITERAL);
+                return new Word(Tag.LITERAL , stringBuffer.toString() );
                 
             case '"':
                 this.stringBuffer.delete(0, stringBuffer.length());
@@ -134,7 +134,7 @@ public class Lexer {
                         stringBuffer.append(this.ch);
                     }
                 }
-                return new Word(stringBuffer.toString(), Tag.LITERAL);
+                return new Word(Tag.LITERAL , stringBuffer.toString() );
 
             case '>':
                 readch();
@@ -173,10 +173,14 @@ public class Lexer {
                 return Symbol.close_par;
 
             case '{':
-                return Symbol.open_c;
-
-            case '}':
-                return Symbol.close_c;
+                while (true) {
+                    readch();
+                    if (this.ch == '}') {
+                        break;
+                    } 
+                }
+               return Symbol.open_c; 
+               
         }
 
         // constante numericas
@@ -225,6 +229,7 @@ public class Lexer {
         }
 
         Token token = new Token(Tag.UNKNOWN);
+        //System.out.println("aqui  ->  " + this.ch);
         this.ch = ' ';
         return token;
     }
