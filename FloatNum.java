@@ -29,8 +29,13 @@ public class FloatNum extends Token {
         this.value = value;
     }
 
-    public float toStringValue() {
-        return value;
+    public float getValue() {
+        return this.value;
     }
+    
+    public String toString(){
+        return "" + this.value;
+    }
+    
     
 }

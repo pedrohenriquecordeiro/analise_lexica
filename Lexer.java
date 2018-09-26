@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+import com.sun.xml.internal.ws.util.StringUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -21,7 +22,7 @@ public class Lexer {
     private char ch = ' ';
     private File file;
     private RandomAccessFile randomAccessFile;
-    StringBuffer stringBuffer ;
+    StringBuffer stringBuffer;
 
     private Hashtable words = new Hashtable();
 
@@ -29,24 +30,24 @@ public class Lexer {
         this.file = new File(fileName);
         this.randomAccessFile = new RandomAccessFile(this.file, "r");
         this.stringBuffer = new StringBuffer();
-        
+
         //inserindo palavras reservadas na hashtable
-        reserve(new Word("start", Tag.START , "START"));
-        reserve(new Word("exit", Tag.EXIT,"EXIT"));
-        reserve(new Word("int", Tag.INT,"INT"));
-        reserve(new Word("float", Tag.FLOAT,"FLOAT"));
-        reserve(new Word("if", Tag.IF,"IF"));
-        reserve(new Word("then", Tag.THEN,"THEN"));
-        reserve(new Word("else", Tag.ELSE,"ELSE"));
-        reserve(new Word("end", Tag.END,"END"));
-        reserve(new Word("do", Tag.DO,"DO"));
-        reserve(new Word("while", Tag.WHILE,"WHILE"));
-        reserve(new Word("end", Tag.END,"END"));
-        reserve(new Word("scan", Tag.SCAN,"SCAN"));
-        reserve(new Word("print", Tag.PRINT,"PRINT"));
-        reserve(new Word("and", Tag.AND,"AND"));
-        reserve(new Word("or", Tag.OR,"OR"));
-        reserve(new Word("not", Tag.NOT,"NOT"));
+        reserve(new Word("start", Tag.START, "START"));
+        reserve(new Word("exit", Tag.EXIT, "EXIT"));
+        reserve(new Word("int", Tag.INT, "INT"));
+        reserve(new Word("float", Tag.FLOAT, "FLOAT"));
+        reserve(new Word("if", Tag.IF, "IF"));
+        reserve(new Word("then", Tag.THEN, "THEN"));
+        reserve(new Word("else", Tag.ELSE, "ELSE"));
+        reserve(new Word("end", Tag.END, "END"));
+        reserve(new Word("do", Tag.DO, "DO"));
+        reserve(new Word("while", Tag.WHILE, "WHILE"));
+        reserve(new Word("end", Tag.END, "END"));
+        reserve(new Word("scan", Tag.SCAN, "SCAN"));
+        reserve(new Word("print", Tag.PRINT, "PRINT"));
+        reserve(new Word("and", Tag.AND, "AND"));
+        reserve(new Word("or", Tag.OR, "OR"));
+        reserve(new Word("not", Tag.NOT, "NOT"));
     }
 
     private void reserve(Word word) {
@@ -93,38 +94,25 @@ public class Lexer {
 
             case ';':
                 return Word.semicolon;
-                
+
             case ',':
                 return Word.comma;
 
             case '.':
-                this.stringBuffer.delete(0, stringBuffer.length());
-                stringBuffer.append(this.ch);
-                while(true){
-                    readch();
-                    if(!Character.isDigit(this.ch)){
-                        break;
-                    }else{
-                        stringBuffer.append(this.ch);
-                    }
-                }
-                ComeBackOne();
-                return new FloatNum( Float.parseFloat(stringBuffer.toString()) ,Tag.FLOATING,"FLOATING");
-                
+                return Word.dot;
 
             case '"':
                 this.stringBuffer.delete(0, stringBuffer.length());
-                while(true){
+                while (true) {
                     readch();
-                    if(this.ch == '"'){
+                    if (this.ch == '"') {
                         break;
-                    }else{
+                    } else {
                         stringBuffer.append(this.ch);
                     }
                 }
-                return new Word(stringBuffer.toString(),Tag.LITERAL,"LITERAL");
-                
-               
+                return new Word(stringBuffer.toString(), Tag.LITERAL, "LITERAL");
+
             case '>':
                 readch();
                 if (this.ch == '=') {
@@ -170,26 +158,31 @@ public class Lexer {
 
         // constante numericas
         if (Character.isDigit(this.ch)) {
-             stringBuffer.delete(0, stringBuffer.length());
+            this.stringBuffer.delete(0, this.stringBuffer.length());
             do {
-                stringBuffer.append(this.ch);
+                this.stringBuffer.append(this.ch);
                 readch();
             } while (Character.isDigit(this.ch) || this.ch == '.');
-            
+
             ComeBackOne();
+
+            int number_dots = countOccurrences(this.stringBuffer.toString(), '.');
             
-            if(stringBuffer.lastIndexOf(".") == -1 ){
-                return new IntegerNum(Integer.parseInt(stringBuffer.toString()) , Tag.INTEGER , "INTEGER");
-            }else{
-                return new FloatNum(Float.parseFloat(stringBuffer.toString()) , Tag.FLOATING , "FLOATING");
+            if (number_dots <= 1) {
+                if (this.stringBuffer.lastIndexOf(".") == -1) {
+                    return new IntegerNum(Integer.parseInt(this.stringBuffer.toString()), Tag.INTEGER, "INTEGER");
+                } else {
+                    return new FloatNum(Float.parseFloat(this.stringBuffer.toString()), Tag.FLOATING, "FLOATING");
+                }
             }
+
         }
 
         //identificadores
         if (Character.isLetter(this.ch)) {
-            stringBuffer.delete(0, stringBuffer.length());
+            this.stringBuffer.delete(0, this.stringBuffer.length());
             do {
-                stringBuffer.append(this.ch);
+                this.stringBuffer.append(this.ch);
                 readch();
             } while (Character.isLetterOrDigit(this.ch));
 
@@ -201,13 +194,13 @@ public class Lexer {
             if (word != null) {
                 return word;
             } else {
-                word = new Word(string, Tag.ID,"ID");
+                word = new Word(string, Tag.ID, "ID");
                 words.put(string, word);
                 return word;
             }
         }
 
-        Token token = new Token(this.ch);
+        Token token = new Token(this.ch, "UNKNOWN");
         this.ch = ' ';
         return token;
     }
@@ -216,6 +209,16 @@ public class Lexer {
         // retorna o ponteiro do arquivo em UMA posicao
         long posicaoCorrentePonteiro = this.randomAccessFile.getFilePointer();
         this.randomAccessFile.seek(posicaoCorrentePonteiro - 1);
+    }
+
+    private int countOccurrences(String haystack, char needle) {
+        int count = 0;
+        for (int i = 0; i < haystack.length(); i++) {
+            if (haystack.charAt(i) == needle) {
+                count++;
+            }
+        }
+        return count;
     }
 
 }

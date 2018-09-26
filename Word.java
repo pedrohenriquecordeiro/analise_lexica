@@ -10,6 +10,7 @@
  * @author pedro
  */
 public class Word extends Token {
+    
     private String lexeme = "";
     
     public static final Word comparation     = new Word("==",Tag.COMPARATION   ,"COMPARATION");

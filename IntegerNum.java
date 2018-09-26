@@ -29,8 +29,12 @@ public class IntegerNum extends Token {
         this.value = value;
     }
 
-    public int toStringValue() {
-        return value;
+    public int getValue() {
+        return this.value;
+    }
+    
+    public String toString(){
+        return "" + this.value;
     }
     
     

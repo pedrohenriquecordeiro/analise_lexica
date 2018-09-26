@@ -10,9 +10,9 @@
  * @author pedro
  */
 public class Token {
-    public final int tag;
     public final String name;
-    
+    public final int tag;
+
     public Token(int tag){
         this.tag = tag;
         this.name = "";
