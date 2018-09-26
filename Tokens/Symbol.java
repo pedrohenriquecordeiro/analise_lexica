@@ -41,13 +41,13 @@ public class Symbol extends Token {
     public static final Symbol close_c         = new Symbol(Tag.CLOSE_C       ,"}" );
     
     
-    public Symbol(String lexeme,String tag){
+    public Symbol(String tag,String lexeme){
         super(tag);
         this.lexeme = lexeme;
     }
     
     
     public String toString(){
-        return "" + this.lexeme;
+        return this.lexeme;
     }
 }

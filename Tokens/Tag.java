@@ -69,7 +69,9 @@ public class Tag {
             INTEGER         = "INTEGER",
             FLOATING        = "FLOATING",
             // identificadores
-            ID              = "ID";
+            ID              = "ID",
+            // token desconhecido
+            UNKNOWN         = "UNKNOWN";
     
     
             

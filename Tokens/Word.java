@@ -20,5 +20,9 @@ public class Word extends Token {
         this.lexeme = lexeme;
     }
     
+    public String getLexeme(){
+        return this.lexeme;
+    }
+    
     
 }

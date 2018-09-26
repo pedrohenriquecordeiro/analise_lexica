@@ -18,8 +18,8 @@ public class Token {
         this.tag = tag;
     }
     
-    
-    public String toString(){
+    public String getTag(){
         return this.tag;
     }
+    
 }

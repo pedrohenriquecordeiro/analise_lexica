@@ -42,26 +42,27 @@ public class Lexer {
         this.env = new Env(null);
 
         //inserindo palavras reservadas na hashtable
-        reserve(new Word("start", Tag.START, "START"));
-        reserve(new Word("exit", Tag.EXIT, "EXIT"));
-        reserve(new Word("int", Tag.INT, "INT"));
-        reserve(new Word("float", Tag.FLOAT, "FLOAT"));
-        reserve(new Word("if", Tag.IF, "IF"));
-        reserve(new Word("then", Tag.THEN, "THEN"));
-        reserve(new Word("else", Tag.ELSE, "ELSE"));
-        reserve(new Word("end", Tag.END, "END"));
-        reserve(new Word("do", Tag.DO, "DO"));
-        reserve(new Word("while", Tag.WHILE, "WHILE"));
-        reserve(new Word("end", Tag.END, "END"));
-        reserve(new Word("scan", Tag.SCAN, "SCAN"));
-        reserve(new Word("print", Tag.PRINT, "PRINT"));
-        reserve(new Word("and", Tag.AND, "AND"));
-        reserve(new Word("or", Tag.OR, "OR"));
-        reserve(new Word("not", Tag.NOT, "NOT"));
+        reserve(new Word(Tag.START,"start"));
+        reserve(new Word(Tag.STRING,"string"));
+        reserve(new Word(Tag.EXIT , "exit"));
+        reserve(new Word(Tag.INT, "int"));
+        reserve(new Word(Tag.FLOAT, "float"));
+        reserve(new Word(Tag.IF, "if"));
+        reserve(new Word(Tag.THEN, "then"));
+        reserve(new Word(Tag.ELSE, "else"));
+        reserve(new Word(Tag.END, "end"));
+        reserve(new Word(Tag.DO, "do"));
+        reserve(new Word(Tag.WHILE, "while"));
+        reserve(new Word(Tag.END, "end"));
+        reserve(new Word(Tag.SCAN, "scan"));
+        reserve(new Word(Tag.PRINT, "print"));
+        reserve(new Word(Tag.AND, "and"));
+        reserve(new Word(Tag.OR, "or"));
+        reserve(new Word(Tag.NOT, "not"));
     }
 
     private void reserve(Word word) {
-        this.words.put(word.toString(), word);
+        this.words.put(word.getLexeme(), word);
     }
 
     private void readch() throws IOException {
@@ -111,17 +112,29 @@ public class Lexer {
             case '.':
                 return Symbol.dot;
 
-            case '"':
+            case '“':
                 this.stringBuffer.delete(0, stringBuffer.length());
                 while (true) {
                     readch();
-                    if (this.ch == '"') {
+                    if (this.ch == '"' || this.ch == '”') {
                         break;
                     } else {
                         stringBuffer.append(this.ch);
                     }
                 }
-                return new Symbol(stringBuffer.toString(), Tag.LITERAL, "LITERAL");
+                return new Word(stringBuffer.toString(), Tag.LITERAL);
+                
+            case '"':
+                this.stringBuffer.delete(0, stringBuffer.length());
+                while (true) {
+                    readch();
+                    if (this.ch == '"' || this.ch == '”') {
+                        break;
+                    } else {
+                        stringBuffer.append(this.ch);
+                    }
+                }
+                return new Word(stringBuffer.toString(), Tag.LITERAL);
 
             case '>':
                 readch();
@@ -180,9 +193,9 @@ public class Lexer {
             
             if (number_dots <= 1) {
                 if (this.stringBuffer.lastIndexOf(".") == -1) {
-                    return new IntegerNum(Integer.parseInt(this.stringBuffer.toString()), Tag.INTEGER, "INTEGER");
+                    return new IntegerNum(Integer.parseInt(this.stringBuffer.toString()));
                 } else {
-                    return new FloatNum(Float.parseFloat(this.stringBuffer.toString()), Tag.FLOATING, "FLOATING");
+                    return new FloatNum(Float.parseFloat(this.stringBuffer.toString()));
                 }
             }
 
@@ -204,14 +217,14 @@ public class Lexer {
             if (word != null) {
                 return word;
             } else {
-                word = new Word(string, Tag.ID, "ID");
+                word = new Word(Tag.ID , string);
                 // insere identificador na tabela de simbolos
-                this.env.put(word,string);
+                this.words.put(string,word);
                 return word;
             }
         }
 
-        Token token = new Token(this.ch, "UNKNOWN");
+        Token token = new Token(Tag.UNKNOWN);
         this.ch = ' ';
         return token;
     }

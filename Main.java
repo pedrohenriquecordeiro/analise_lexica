@@ -22,19 +22,20 @@ public class Main {
             
             
             Token token;
-            String token_str,token_name;
+            String lexeme,tag;
             int numero_token = 0;
             
             do{
                 numero_token++;
-                if(numero_token >= 500){
+                if(numero_token >= 300){
                     break;
                 }
+                // buscar um token
                 token = lexer.scan();
-                token_name = token.getName();
-                token_str = token.toString();
-                System.out.println(token_str + " : " + token_name);
-            }while(!token_name.equals("EXIT"));
+                // retorna a tag
+                tag = token.getTag();
+                System.out.println("-> " + tag );
+            }while(!tag.equals("EXIT"));
             
          
             
