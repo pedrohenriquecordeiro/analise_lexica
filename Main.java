@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class Main {
 
     public static void main(String[] args) {
-        /*try {
+        try {
             Lexer lexer = new Lexer("C:\\Users\\pedro\\Dropbox\\"
                     + "7a período\\Compiladores\\Trabalho\\primeira_parte\\arquivo.txt");
             
@@ -46,7 +46,7 @@ public class Main {
         }catch(IOException e2){
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e2);  
         }
-        */
+        
         //8172
         //“Sim”
         //System.out.println('“' - '0');

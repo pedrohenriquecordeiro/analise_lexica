@@ -1,7 +1,10 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * observacao quanto ao RandomAcessFile
+ * existe um ponteiro de arquivo, esse ponteiro aponta para um char do arquivo
+ * quando damos um read(), o comando retorna o char apontado pelo ponteiro e 
+ * incrementa a posicao do ponteiro em 1, ou seja
+ * ele passa a apontar pro proximo char, e retornará esse char no comando read()
+ *
  */
 
 import Table_of_Symbols.Env;
@@ -27,7 +30,7 @@ public class Lexer {
 
     public static int line = 1;
     private char ch = ' ';
-    private File file;
+    private char last_ch = ' ';
     private RandomAccessFile randomAccessFile;
     StringBuffer stringBuffer;
 
@@ -36,8 +39,8 @@ public class Lexer {
     private Env env;
 
     public Lexer(String fileName) throws FileNotFoundException, IOException {
-        this.file = new File(fileName);
-        this.randomAccessFile = new RandomAccessFile(this.file, "r");
+        
+        this.randomAccessFile = new RandomAccessFile(new File(fileName), "r");
         this.stringBuffer = new StringBuffer();
         this.env = new Env(null);
 
@@ -60,7 +63,6 @@ public class Lexer {
         reserve(new Word(Tag.OR, "or"));
         reserve(new Word(Tag.NOT, "not"));
         
-        readch();
     }
 
     private void reserve(Word word) {
@@ -68,6 +70,7 @@ public class Lexer {
     }
 
     private void readch() throws IOException {
+        this.last_ch = this.ch;
         this.ch = (char) this.randomAccessFile.read();
         //int c = this.ch - '0';
         //System.out.println("readch " + this.ch);
@@ -104,7 +107,6 @@ public class Lexer {
                 if (readch('=')) {
                     return Symbol.comparation;
                 } else {
-                    ComeBackOne();
                     return Symbol.equal;
                 }
 
@@ -134,7 +136,6 @@ public class Lexer {
                 if (this.ch == '=') {
                     return Symbol.greather_equal;
                 } else {
-                    ComeBackOne();
                     return Symbol.greather_than;
                 }
 
@@ -145,7 +146,6 @@ public class Lexer {
                 } else if (this.ch == '=') {
                     return Symbol.less_equal;
                 } else {
-                    ComeBackOne();
                     return Symbol.less_than;
                 }
 
@@ -232,9 +232,9 @@ public class Lexer {
                 readch();
             } while (Character.isLetterOrDigit(this.ch));
             
-            System.out.println("come back antes " + this.ch);
+            //System.out.println("come back antes " + this.ch);
             ComeBackOne();
-            System.out.println("come back depois " + this.ch);
+            //System.out.println("come back depois " + this.ch);
 
             String string = stringBuffer.toString();
             Word word = (Word) reserved_words.get(string);
