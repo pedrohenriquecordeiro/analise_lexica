@@ -122,16 +122,25 @@ public class Lexer {
                 return Symbol.dot;
 
             case '"':
+                long posicaoAtualPonteiro = this.randomAccessFile.getFilePointer();
+                char_to_int = this.ch - '0';
                 this.stringBuffer.delete(0, stringBuffer.length());
                 while (true) {
                     readch();
-                    if (this.ch == '"' || this.ch == (char) -1) {
+                    char_to_int = this.ch - '0';
+                    if (this.ch == '"' || char_to_int == 65487) {
                         break;
                     } else {
-                        stringBuffer.append(this.ch);
+                        this.stringBuffer.append(this.ch);
                     }
                 }
-                return new Word(Tag.LITERAL, stringBuffer.toString());
+                
+                if(char_to_int == 65487){
+                    this.randomAccessFile.seek(posicaoAtualPonteiro);
+                    return new Token(Tag.UNKNOWN, "" + '"');
+                }else{
+                    return new Word(Tag.LITERAL, stringBuffer.toString());
+                }
 
             case '>':
                 readch();
