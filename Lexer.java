@@ -86,6 +86,8 @@ public class Lexer {
     }
 
     public Token scan() throws IOException {
+        int char_to_int = this.ch - '0';
+        
         //desconsidera delimitadores na entrada
         do {
             readch();
@@ -186,7 +188,7 @@ public class Lexer {
         
          */
         // convertendo o char corrente para inteiro
-        int char_to_int = this.ch - '0';
+        char_to_int = this.ch - '0';
 
         if (char_to_int == 99) {
             this.stringBuffer.delete(0, stringBuffer.length());
@@ -210,7 +212,11 @@ public class Lexer {
                 readch();
             } while (Character.isDigit(this.ch) || this.ch == '.');
 
-            ComeBackOne();
+            // verificando se eh final de arquivo
+            char_to_int = this.ch - '0';
+            if(!(char_to_int == 65487)){
+                ComeBackOne();
+            }
 
             int number_dots = countOccurrences(this.stringBuffer.toString(), '.');
 
@@ -232,9 +238,11 @@ public class Lexer {
                 readch();
             } while (Character.isLetterOrDigit(this.ch));
             
-            //System.out.println("come back antes " + this.ch);
-            ComeBackOne();
-            //System.out.println("come back depois " + this.ch);
+            // verificando se eh final de arquivo
+            char_to_int = this.ch - '0';
+            if(!(char_to_int == 65487)){
+                ComeBackOne();
+            }
 
             String string = stringBuffer.toString();
             Word word = (Word) reserved_words.get(string);
@@ -251,7 +259,7 @@ public class Lexer {
 
         Token token = new Token(Tag.UNKNOWN, "" + this.ch);
         //System.out.println("aqui  ->  " + this.ch);
-        this.ch = ' ';
+        //this.ch = ' ';
         return token;
     }
 
