@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class Main {
 
     public static void main(String[] args) {
-        try {
+        /*try {
             Lexer lexer = new Lexer("C:\\Users\\pedro\\Dropbox\\"
                     + "7a período\\Compiladores\\Trabalho\\primeira_parte\\arquivo.txt");
             
@@ -34,8 +34,10 @@ public class Main {
                 token = lexer.scan();
                 // retorna a tag
                 tag = token.getTag();
-                System.out.println("-> " + tag );
-            }while(!tag.equals("EXIT"));
+                System.out.println( tag + " < " + token.getLexeme() + " >");
+                
+                
+            }while(!tag.equals("EXIT") );
             
          
             
@@ -44,6 +46,13 @@ public class Main {
         }catch(IOException e2){
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e2);  
         }
+        */
+        //8172
+        //“Sim”
+        //System.out.println('“' - '0');
+       // System.out.println('”' - '0');
     }
+        
+    
 
 }

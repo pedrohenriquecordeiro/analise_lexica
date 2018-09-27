@@ -31,20 +31,20 @@ public class Lexer {
     private RandomAccessFile randomAccessFile;
     StringBuffer stringBuffer;
 
-    private Hashtable words = new Hashtable();
-    
+    private Hashtable reserved_words = new Hashtable();
+
     private Env env;
 
-    public Lexer(String fileName) throws FileNotFoundException {
+    public Lexer(String fileName) throws FileNotFoundException, IOException {
         this.file = new File(fileName);
         this.randomAccessFile = new RandomAccessFile(this.file, "r");
         this.stringBuffer = new StringBuffer();
         this.env = new Env(null);
 
         //inserindo palavras reservadas na hashtable
-        reserve(new Word(Tag.START,"start"));
-        reserve(new Word(Tag.STRING,"string"));
-        reserve(new Word(Tag.EXIT , "exit"));
+        reserve(new Word(Tag.START, "start"));
+        reserve(new Word(Tag.STRING, "string"));
+        reserve(new Word(Tag.EXIT, "exit"));
         reserve(new Word(Tag.INT, "int"));
         reserve(new Word(Tag.FLOAT, "float"));
         reserve(new Word(Tag.IF, "if"));
@@ -59,14 +59,18 @@ public class Lexer {
         reserve(new Word(Tag.AND, "and"));
         reserve(new Word(Tag.OR, "or"));
         reserve(new Word(Tag.NOT, "not"));
+        
+        readch();
     }
 
     private void reserve(Word word) {
-        this.words.put(word.getLexeme(), word);
+        this.reserved_words.put(word.getLexeme(), word);
     }
 
     private void readch() throws IOException {
-        this.ch = (char) randomAccessFile.read();
+        this.ch = (char) this.randomAccessFile.read();
+        //int c = this.ch - '0';
+        //System.out.println("readch " + this.ch);
     }
 
     private boolean readch(char character) throws IOException {
@@ -100,6 +104,7 @@ public class Lexer {
                 if (readch('=')) {
                     return Symbol.comparation;
                 } else {
+                    ComeBackOne();
                     return Symbol.equal;
                 }
 
@@ -112,35 +117,24 @@ public class Lexer {
             case '.':
                 return Symbol.dot;
 
-            case '“':
-                this.stringBuffer.delete(0, stringBuffer.length());
-                while (true) {
-                    readch();
-                    if (this.ch == '"' || this.ch == '”') {
-                        break;
-                    } else {
-                        stringBuffer.append(this.ch);
-                    }
-                }
-                return new Word(Tag.LITERAL , stringBuffer.toString() );
-                
             case '"':
                 this.stringBuffer.delete(0, stringBuffer.length());
                 while (true) {
                     readch();
-                    if (this.ch == '"' || this.ch == '”') {
+                    if (this.ch == '"' || this.ch == (char) -1) {
                         break;
                     } else {
                         stringBuffer.append(this.ch);
                     }
                 }
-                return new Word(Tag.LITERAL , stringBuffer.toString() );
+                return new Word(Tag.LITERAL, stringBuffer.toString());
 
             case '>':
                 readch();
                 if (this.ch == '=') {
                     return Symbol.greather_equal;
                 } else {
+                    ComeBackOne();
                     return Symbol.greather_than;
                 }
 
@@ -151,6 +145,7 @@ public class Lexer {
                 } else if (this.ch == '=') {
                     return Symbol.less_equal;
                 } else {
+                    ComeBackOne();
                     return Symbol.less_than;
                 }
 
@@ -175,12 +170,36 @@ public class Lexer {
             case '{':
                 while (true) {
                     readch();
-                    if (this.ch == '}') {
+                    if (this.ch == '}' || this.ch == (char) -1) {
                         break;
-                    } 
+                    }
                 }
-               return Symbol.open_c; 
-               
+                return Symbol.comment;
+
+        }
+
+        /*
+             converting char to integer
+             '“' = 99
+             '”' = 100
+             fim de arquivo = 65487
+        
+         */
+        // convertendo o char corrente para inteiro
+        int char_to_int = this.ch - '0';
+
+        if (char_to_int == 99) {
+            this.stringBuffer.delete(0, stringBuffer.length());
+            while (true) {
+                readch();
+                char_to_int = this.ch - '0';
+                if (char_to_int == 100 || char_to_int == 65487) {
+                    break;
+                } else {
+                    stringBuffer.append(this.ch);
+                }
+            }
+            return new Word(Tag.LITERAL, stringBuffer.toString());
         }
 
         // constante numericas
@@ -194,7 +213,7 @@ public class Lexer {
             ComeBackOne();
 
             int number_dots = countOccurrences(this.stringBuffer.toString(), '.');
-            
+
             if (number_dots <= 1) {
                 if (this.stringBuffer.lastIndexOf(".") == -1) {
                     return new IntegerNum(Integer.parseInt(this.stringBuffer.toString()));
@@ -205,30 +224,32 @@ public class Lexer {
 
         }
 
-        //identificadore ou palavras reservadas
+        //identificadores ou palavras reservadas
         if (Character.isLetter(this.ch)) {
             this.stringBuffer.delete(0, this.stringBuffer.length());
             do {
                 this.stringBuffer.append(this.ch);
                 readch();
             } while (Character.isLetterOrDigit(this.ch));
-
+            
+            System.out.println("come back antes " + this.ch);
             ComeBackOne();
+            System.out.println("come back depois " + this.ch);
 
             String string = stringBuffer.toString();
-            Word word = (Word) words.get(string);
+            Word word = (Word) reserved_words.get(string);
 
             if (word != null) {
                 return word;
             } else {
-                word = new Word(Tag.ID , string);
+                word = new Word(Tag.ID, string);
                 // insere identificador na tabela de simbolos
-                this.words.put(string,word);
+                this.reserved_words.put(string, word);
                 return word;
             }
         }
 
-        Token token = new Token(Tag.UNKNOWN);
+        Token token = new Token(Tag.UNKNOWN, "" + this.ch);
         //System.out.println("aqui  ->  " + this.ch);
         this.ch = ' ';
         return token;
@@ -238,6 +259,8 @@ public class Lexer {
         // retorna o ponteiro do arquivo em UMA posicao
         long posicaoCorrentePonteiro = this.randomAccessFile.getFilePointer();
         this.randomAccessFile.seek(posicaoCorrentePonteiro - 1);
+        //readch();
+        //System.out.println("in come back one -> " + this.ch);
     }
 
     private int countOccurrences(String haystack, char needle) {

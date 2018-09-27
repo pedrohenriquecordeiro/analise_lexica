@@ -39,6 +39,7 @@ public class Symbol extends Token {
     public static final Symbol close_par       = new Symbol(Tag.CLOSE_PAR     ,")" );
     public static final Symbol open_c          = new Symbol(Tag.OPEN_C        ,"{" );
     public static final Symbol close_c         = new Symbol(Tag.CLOSE_C       ,"}" );
+    public static final Symbol comment         = new Symbol(Tag.COMMENT       ,"" );
     
     
     public Symbol(String tag,String lexeme){
@@ -47,7 +48,9 @@ public class Symbol extends Token {
     }
     
     
-    public String toString(){
+    public String getLexeme(){
         return this.lexeme;
     }
+    
+
 }
