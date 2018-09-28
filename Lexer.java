@@ -4,7 +4,6 @@
  * quando damos um read(), o comando retorna o char apontado pelo ponteiro e 
  * incrementa a posicao do ponteiro em 1, ou seja
  * ele passa a apontar pro proximo char, e retornará esse char no comando read()
- *
  */
 
 import Table_of_Symbols.Env;
@@ -261,7 +260,7 @@ public class Lexer {
             } else {
                 word = new Word(Tag.ID, string);
                 // insere identificador na tabela de simbolos
-                this.reserved_words.put(string, word);
+                this.env.put(string, word);
                 return word;
             }
         }
@@ -288,6 +287,10 @@ public class Lexer {
             }
         }
         return count;
+    }
+    
+    public void getSymbolTable(){
+        this.env.showHashTable();
     }
 
 }

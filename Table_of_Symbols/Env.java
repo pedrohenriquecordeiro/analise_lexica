@@ -1,31 +1,39 @@
 package Table_of_Symbols;
 
-
 import Tokens.Token;
 import Tokens.Word;
+import java.util.ArrayList;
 import java.util.Hashtable;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import java.util.List;
 
 /**
  *
  * @author pedro
  */
+
 public class Env {
-    private Hashtable table;
-    protected Env prev;
+    private Hashtable<String, Word> table;
+    private Env prev;
     
     public Env(Env env){
-        this.table = new Hashtable();
+        this.table = new Hashtable<String, Word>();
         this.prev = env;
     }
     
-    public void put(Word word,String name){
-        this.table.put(name,word);
+    public void put(String key,Word word){
+        if(!this.table.containsKey(key)){
+            this.table.put(key,word);
+        }
+    }
+    
+    public void delete(String key){
+        if(!this.table.containsKey(key)){
+            this.table.remove(key);
+        }
+    }
+    
+    public boolean containsThisKey(String key){
+        return this.table.containsKey(key);
     }
     
     public Word get(Word word){
@@ -38,4 +46,11 @@ public class Env {
         return null;
     }
     
+    public void showHashTable(){
+        ArrayList<Word> arrayList = new ArrayList<Word>(this.table.values());
+        for(Word w  : arrayList){
+            System.out.println(w.getLexeme());
+        }
+    }
+
 }

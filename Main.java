@@ -1,25 +1,21 @@
-
-
 import Tokens.Token;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  *
  * @author pedro henrique cordeiro
  *
  */
+
 public class Main {
 
     public static void main(String[] args) {
         try {
-            Lexer lexer = new Lexer("C:\\Users\\pedro\\Dropbox\\"
-                    + "7a período\\Compiladores\\Trabalho\\primeira_parte\\arquivo.txt");
-            
-            
+            Lexer lexer = new Lexer("C:\\Users\\pedro\\Dropbox\\7a período\\Compiladores"
+                    + "\\Trabalho\\primeira_parte\\Lexeme\\src\\arquivo.txt");
             
             Token token;
             String lexeme,tag;
@@ -34,25 +30,20 @@ public class Main {
                 token = lexer.scan();
                 // retorna a tag
                 tag = token.getTag();
-                System.out.println( tag + " < " + token.getLexeme() + " >");
+                System.out.println( tag + "< " + token.getLexeme() + " >");
                 
                 
             }while(!tag.equals("EXIT") );
             
-         
-            
+            System.out.println("\n\nTABELA DE SIMBOLOS");
+            lexer.getSymbolTable();
+             
         } catch (FileNotFoundException e1) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e1);
         }catch(IOException e2){
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e2);  
         }
         
-        //8172
-        //“Sim”
-        //System.out.println('“' - '0');
-       // System.out.println('”' - '0');
     }
-        
     
-
 }

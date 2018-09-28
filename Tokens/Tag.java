@@ -7,32 +7,32 @@ package Tokens;
 public class Tag {
     public final static String 
             // palavras reservadas
-            EXIT            = "EXIT ",
+            EXIT            = "EXIT",
             START           = "START" ,
             // tipos
-            INT             = "INT ",
+            INT             = "INT",
             FLOAT           = "FLOAT",
             STRING          = "STRING",
             // controle de fluxo
-            IF              = "IF ",
-            THEN            = "THEN ",
+            IF              = "IF",
+            THEN            = "THEN",
             ELSE            = "ELSE",
-            END             = "END ",
+            END             = "END",
             // repeticao
             DO              = "DO",
-            WHILE           = "WHILE ",
+            WHILE           = "WHILE",
             // IO
-            SCAN            = "SCAN ",
+            SCAN            = "SCAN",
             PRINT           = "PRINT",
             // booleanos
-            NOT             = "NOT ",
+            NOT             = "NOT",
             OR              = "OR",
-            AND             = "AND ",
+            AND             = "AND",
             //operadores
             // +
             SUM             = "SUM",
             // -
-            MINUS           = "MINUS ",
+            MINUS           = "MINUS",
             // * 
             MULT            = "MULT",
             // /
