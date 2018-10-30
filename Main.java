@@ -1,4 +1,5 @@
-import Tokens.Token;
+import lex.Lexer;
+import lex.Token;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -14,8 +15,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            Lexer lexer = new Lexer("C:\\Users\\pedro\\Dropbox\\7a período\\Compiladores"
-                    + "\\Trabalho\\primeira_parte\\Lexeme\\src\\arquivo.txt");
+            Lexer lexer = new Lexer("/home/pedro/Dropbox/7a period/Compiladores/Trabalho/primeira_parte/Lexeme/src/arquivo.txt");
             
             Token token;
             String lexeme,tag;
