@@ -1,7 +1,7 @@
-# analise_lexica
-Trabalho apresentado a disciplina de Compiladores. Projeto de desenvolvimento de um analisador lexico de uma linguagem hipotetica.
+# compilador
+Trabalho apresentado a disciplina de Compiladores. 
 
-Retorno do compilador para o arquivo teste arquivo.txt.
+Retorno do analisador leximo do compilador para o arquivo teste arquivo.txt.
 
 Classe Main eh a que instancia o Lexer.
 
