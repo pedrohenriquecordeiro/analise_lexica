@@ -48,21 +48,74 @@ public class Syntaxer {
     // production
     
     void program() throws IOException{
-        switch(this.token.lexeme){
-            case Tag.START:
+        if(this.token.lexeme.equals(Tag.START)){
                 eat(Tag.START);
-                if( this.token.lexeme.equals(Tag.INT) ||
-                    this.token.lexeme.equals(Tag.FLOAT) ||
-                    this.token.lexeme.equals(Tag.STRING)){
-                    do{
+                if(  this.token.lexeme.equals(Tag.INT) ||
+                        this.token.lexeme.equals(Tag.FLOAT) ||
+                        this.token.lexeme.equals(Tag.STRING)){
                        decl_list(); 
-                    }while( this.token.lexeme.equals(Tag.INT) ||
-                            this.token.lexeme.equals(Tag.FLOAT) ||
-                            this.token.lexeme.equals(Tag.STRING));
                 }
                 stmt_list();
                 eat(Tag.END);
-            default: error(this.token.lexeme);
+        }else{
+            error(this.token.lexeme);
+        }
+    }
+    
+    void decl_list() throws IOException{
+        
+        do{
+            decl();
+        }while( this.token.lexeme.equals(Tag.INT) ||
+                this.token.lexeme.equals(Tag.FLOAT) ||
+                this.token.lexeme.equals(Tag.STRING));
+        
+    }
+    
+    void stmt_list() throws IOException{
+        do{
+            stmt();
+        }while(this.token.lexeme.equals(Tag.IF) ||
+                this.token.lexeme.equals(Tag.ID) ||
+                this.token.lexeme.equals(Tag.WHILE)||
+                this.token.lexeme.equals(Tag.SCAN) ||
+                this.token.lexeme.equals(Tag.PRINT));
+    }
+    
+    void stmt() throws IOException{
+        if(this.token.lexeme.equals(Tag.ID)){
+            assign_stmt();
+            eat(Tag.SEMICOLON);
+        }else if(this.token.lexeme.equals(Tag.IF)){
+            if_stmt();
+        }else if(this.token.lexeme.equals(Tag.DO)){
+            while_stmt();
+        }else if(this.token.lexeme.equals(Tag.SCAN)){
+            read_stmt();
+            eat(Tag.SEMICOLON);
+        }else if(this.token.lexeme.equals(Tag.PRINT)){
+            write_stmt();
+            eat(Tag.SEMICOLON);
+        }else{
+            error(this.token.lexeme);
+        }
+    }
+    
+    void decl() throws IOException{
+        type();
+        ident_list();
+        eat(Tag.SEMICOLON);
+    }
+    
+    void type() throws IOException{
+        if(this.token.lexeme.equals(Tag.INT)){
+            eat(Tag.INT);
+        }else if(this.token.lexeme.equals(Tag.FLOAT)){
+            eat(Tag.FLOAT);
+        }else if(this.token.lexeme.equals(Tag.STRING)){
+            eat(Tag.STRING);
+        }else{
+            error(this.token.lexeme);
         }
     }
     
