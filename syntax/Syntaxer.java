@@ -35,14 +35,14 @@ public class Syntaxer {
         if(token.tag.equals(this.token.lexeme)){
             advance();
         }else{
-            error(token.lexeme);
+            error(token_lexeme , this.token.lexeme);
         }
     }
 
-    private void error(String token_lexeme) {
+    private void error(String token_expected , String token_gived) {
         // parametro = token recebido
-        System.out.println("Geted    : " + this.token.lexeme);
-        System.out.println("Expected : " + token_lexeme);
+        System.out.println("Geted    : " + token_expected);
+        System.out.println("Expected : " + token_gived);
     }
     
     // production
@@ -58,7 +58,7 @@ public class Syntaxer {
                 stmt_list();
                 eat(Tag.END);
         }else{
-            error(this.token.lexeme);
+            error(Tag.START,this.token.lexeme);
         }
     }
     
@@ -97,7 +97,7 @@ public class Syntaxer {
             write_stmt();
             eat(Tag.SEMICOLON);
         }else{
-            error(this.token.lexeme);
+            error(Tag.ID,this.token.lexeme);
         }
     }
     
@@ -115,43 +115,42 @@ public class Syntaxer {
         }else if(this.token.lexeme.equals(Tag.STRING)){
             eat(Tag.STRING);
         }else{
-            error(this.token.lexeme);
+            error(Tag.INT,this.token.lexeme);
         }
     }
     
+    void ident_list(){
+        
+    }
     void identifier() throws IOException{
-        switch(this.token.lexeme){
-            case Tag.ID :
-                eat(Tag.ID);
-                break;
-            default: error(this.token.lexeme);
-        }
+       if(this.token.lexeme.equals(Tag.ID)){
+            eat(Tag.ID);
+       }else{   
+            error(Tag.ID,this.token.lexeme);
+       }
     }
     
     void literal() throws IOException{
-        switch(this.token.lexeme){
-            case Tag.LITERAL:
-                eat(Tag.LITERAL);
-                break;
-            default : error(this.token.lexeme);
+        if(this.token.lexeme.equals(Tag.LITERAL)){
+            eat(Tag.LITERAL);
+        }else{
+            error(Tag.LITERAL,this.token.lexeme);
         }
     }
     
     void float_const() throws IOException{
-        switch(this.token.lexeme){
-            case Tag.FLOATING:
-                eat(Tag.FLOATING);
-                break;
-            default : error(this.token.lexeme);
+        if(this.token.lexeme.equals(Tag.FLOATING)){
+            eat(Tag.FLOATING);
+        }else{
+            error(Tag.FLOATING,this.token.lexeme);
         }
     }
     
     void integer_const() throws IOException{
-        switch(this.token.lexeme){
-            case Tag.INTEGER:
+        if(this.token.lexeme.equals(Tag.INTEGER)){
                 eat(Tag.INTEGER);
-                break;
-            default : error(this.token.lexeme);
+        }else{
+            error(Tag.INTEGER,this.token.lexeme);
         }
     }
     
