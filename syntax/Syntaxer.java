@@ -101,6 +101,70 @@ public class Syntaxer {
         }
     }
     
+    void assign_stmt() throws IOException{
+        eat(Tag.ID);
+        eat(Tag.EQUAL);
+        simple_expr();
+    }
+    
+    void simple_expr(){
+        if(this.token.lexeme.equals(Tag.ID) ||
+           this.token.lexeme.equals(Tag.INTEGER) ||
+           this.token.lexeme.equals(Tag.FLOATING) ||
+           this.token.lexeme.equals(Tag.LITERAL) ||
+           this.token.lexeme.equals(Tag.OPEN_PAR)){
+            term();
+        }
+        
+        // recurão a esquerda
+    }
+    
+    void if_stmt() throws IOException{
+        eat(Tag.IF);
+        condition();
+        eat(Tag.ELSE);
+        stmt_list();
+        if_stmt_2();
+    }
+    
+    void condition(){
+        expression();
+    }
+    
+    void relop(){
+        if(this.token.lexeme.equals(Tag.COMPARATION)){
+            eat(Tag.COMPARATION);
+        }else if(this.token.lexeme.equals(Tag.GREATHER_EQUAL)){
+            eat(Tag.GREATHER_EQUAL);
+        }else if(this.token.lexeme.equals(Tag.GREATHER_THAN)){
+            eat(Tag.GREATHER_THAN);
+        }else if(this.token.lexeme.equals(Tag.LESS_EQUAL)){
+            eat(Tag.LESS_EQUAL);
+        }else if(this.token.lexeme.equals(Tag.LESS_THAN)){
+            eat(Tag.LESS_THAN);
+        }else{
+            error("relop",this.token.lexeme);
+        }
+        
+    }
+    
+    void expression(){
+        // problema
+    }
+    
+    
+    
+    void if_stmt_2() throws IOException{
+        if(this.token.lexeme.equals(Tag.END)){
+            eat(Tag.END);
+        }else if(this.token.lexeme.equals(Tag.ELSE)){
+            eat(Tag.ELSE);
+            stmt_list();
+            eat(Tag.END);
+        }
+        
+    }
+    
     void decl() throws IOException{
         type();
         ident_list();
