@@ -119,19 +119,39 @@ public class Syntaxer {
         // recurão a esquerda
     }
     
+    /* 
+    foi necessario adiar a descisao expandindo o if_stmt
+    
+    if_stmt ::= if condition then stmt_list if_stmt_2
+    */ 
     void if_stmt() throws IOException{
         eat(Tag.IF);
         condition();
-        eat(Tag.ELSE);
+        eat(Tag.THEN);
         stmt_list();
         if_stmt_2();
+    }
+    
+    /*
+    expansao do if_stmt
+    
+    if_stmt ::= end | else stmt_list end
+    */
+    void if_stmt_2() throws IOException{
+        if(this.token.lexeme.equals(Tag.END)){
+            eat(Tag.END);
+        }else if(this.token.lexeme.equals(Tag.ELSE)){
+            eat(Tag.ELSE);
+            stmt_list();
+            eat(Tag.END);
+        }  
     }
     
     void condition(){
         expression();
     }
     
-    void relop(){
+    void relop() throws IOException{
         if(this.token.lexeme.equals(Tag.COMPARATION)){
             eat(Tag.COMPARATION);
         }else if(this.token.lexeme.equals(Tag.GREATHER_EQUAL)){
@@ -142,6 +162,8 @@ public class Syntaxer {
             eat(Tag.LESS_EQUAL);
         }else if(this.token.lexeme.equals(Tag.LESS_THAN)){
             eat(Tag.LESS_THAN);
+        }else if(this.token.lexeme.equals(Tag.DIFF)){
+            eat(Tag.DIFF);
         }else{
             error("relop",this.token.lexeme);
         }
@@ -154,16 +176,7 @@ public class Syntaxer {
     
     
     
-    void if_stmt_2() throws IOException{
-        if(this.token.lexeme.equals(Tag.END)){
-            eat(Tag.END);
-        }else if(this.token.lexeme.equals(Tag.ELSE)){
-            eat(Tag.ELSE);
-            stmt_list();
-            eat(Tag.END);
-        }
-        
-    }
+    
     
     void decl() throws IOException{
         type();
