@@ -32,6 +32,9 @@ public class Syntaxer {
 
     void advance() throws IOException {
         this.token = this.lexer.scan();
+        if(this.token.getTag().equals(Tag.COMMENT)){
+            advance();
+        }
         System.out.println(this.token + "::" + this.lexer.getLine());
     }
 

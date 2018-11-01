@@ -1,4 +1,5 @@
 start
+{
 int a,b;
 int result;
 float a,x,total;
@@ -7,11 +8,12 @@ a = 2;
 x = 5.1;
 scan(b);
 scan(c);
-if (a==1) then
-    b = 2.4;
-    c = b + 1;
-end
-
-a = 1;
+result = (a*b ++ 1) / 2;
+print "Resultado : ";
+print (result);
+print ("Total: ");
+total = y/x;
+print("Total: ";
+print(total);}
 
 exit
