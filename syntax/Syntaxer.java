@@ -39,8 +39,8 @@ public class Syntaxer {
     }
 
     private void error(String token_expected, String token_gived) {
-        System.out.println("Gived    : " + token_gived);
         System.out.println("Expected : " + token_expected);
+        System.out.println("Gived    : " + token_gived);
     }
 
     // ---------------------- productions -----------------------------------------------
@@ -127,13 +127,13 @@ public class Syntaxer {
             write_stmt();
             eat(Tag.SEMICOLON);
         } else {
-            error(Tag.ID, this.token.lexeme);
+            error("stmt", this.token.lexeme);
         }
     }
 
     //assign-stmt ::= identifier "=" simple_expr
     void assign_stmt() throws IOException {
-        eat(Tag.ID);
+        identifier();
         eat(Tag.EQUAL);
         simple_expr();
     }
@@ -178,14 +178,35 @@ public class Syntaxer {
     }
 
     //read-stmt ::= scan "(" identifier ")"
-    
-    
+    void read_stmt() throws IOException {
+        eat(Tag.SCAN);
+        eat(Tag.OPEN_PAR);
+        identifier();
+        eat(Tag.CLOSE_PAR);
+    }
+
     //write-stmt ::= print "(" writable ")"
-    
-    
+    void write_stmt() throws IOException {
+        eat(Tag.PRINT);
+        eat(Tag.OPEN_PAR);
+        writable();
+        eat(Tag.CLOSE_PAR);
+    }
+
     //writable ::= simple-expr | literal
-    
-    
+    void writable() throws IOException {
+        if (this.token.lexeme.equals(Tag.ID)
+                || this.token.lexeme.equals(Tag.FLOATING)
+                || this.token.lexeme.equals(Tag.INTEGER)
+                || this.token.lexeme.equals(Tag.OPEN_PAR)
+                || this.token.lexeme.equals(Tag.NOT)
+                || this.token.lexeme.equals(Tag.MINUS)) {
+            simple_expr();
+        } else if (this.token.lexeme.equals(Tag.LITERAL)) {
+            literal();
+        }
+    }
+
     //expression ::= simple-expr expression-2
     void expression() throws IOException {
         simple_expr();
@@ -212,8 +233,17 @@ public class Syntaxer {
     }
 
     //simple-expr-2 ::= addop term simple-expr-2 | L
-    
-    
+    void simple_expr_2() throws IOException {
+        if (this.token.lexeme.equals(Tag.SUM)
+                || this.token.lexeme.equals(Tag.MINUS)
+                || this.token.lexeme.equals(Tag.OR)) {
+            addop();
+            term();
+            simple_expr_2();
+        }
+
+    }
+
     //term ::= factor-a term-2
     void term() throws IOException {
         factor_a();
@@ -221,8 +251,16 @@ public class Syntaxer {
     }
 
     //term-2 ::= mulop factor-a term-2 | L
-    
-    
+    void term_2() throws IOException {
+        if (this.token.lexeme.equals(Tag.MULT)
+                || this.token.lexeme.equals(Tag.DIV)
+                || this.token.lexeme.equals(Tag.AND)) {
+            mulop();
+            factor_a();
+            term_2();
+        }
+    }
+
     //fator-a ::= factor | not factor | "-" factor
     void factor_a() throws IOException {
         if (this.token.lexeme.equals(Tag.ID)
@@ -243,7 +281,7 @@ public class Syntaxer {
     //factor ::= identifier | constant | "(" expression ")"
     void factor() throws IOException {
         if (this.token.lexeme.equals(Tag.ID)) {
-            eat(Tag.ID);
+            identifier();
         } else if (this.token.lexeme.equals(Tag.FLOATING)
                 || this.token.lexeme.equals(Tag.INTEGER)
                 || this.token.lexeme.equals(Tag.LITERAL)) {
@@ -258,7 +296,7 @@ public class Syntaxer {
     //relop ::= "==" | ">" | ">=" | "<" | "<=" | "<>"
     void relop() throws IOException {
         if (this.token.lexeme.equals(Tag.COMPARATION)) {
-            eat(Tag.COMPARATION);
+            relop();
         } else if (this.token.lexeme.equals(Tag.GREATHER_EQUAL)) {
             eat(Tag.GREATHER_EQUAL);
         } else if (this.token.lexeme.equals(Tag.GREATHER_THAN)) {
@@ -276,19 +314,39 @@ public class Syntaxer {
     }
 
     //addop ::= "+" | "-" | or
-    
-    
+    void addop() throws IOException {
+        if (this.token.lexeme.equals(Tag.SUM)) {
+            eat(Tag.SUM);
+        } else if (this.token.lexeme.equals(Tag.MINUS)) {
+            eat(Tag.MINUS);
+        } else if (this.token.lexeme.equals(Tag.OR)) {
+            eat(Tag.OR);
+        } else {
+            error("addop", this.token.lexeme);
+        }
+    }
+
     //mulop ::= "*" | "/" | and
-    
-    
+    void mulop() throws IOException {
+        if (this.token.lexeme.equals(Tag.MULT)) {
+            eat(Tag.MULT);
+        } else if (this.token.lexeme.equals(Tag.DIV)) {
+            eat(Tag.DIV);
+        } else if (this.token.lexeme.equals(Tag.AND)) {
+            eat(Tag.AND);
+        } else {
+            error("mulop", this.token.lexeme);
+        }
+    }
+
     //constant ::= integer_const | float_const | literal
     void constant() throws IOException {
         if (this.token.lexeme.equals(Tag.FLOATING)) {
-            eat(Tag.FLOATING);
+            integer_const();
         } else if (this.token.lexeme.equals(Tag.INTEGER)) {
-            eat(Tag.INTEGER);
+            float_const();
         } else if (this.token.lexeme.equals(Tag.LITERAL)) {
-            eat(Tag.LITERAL);
+            literal();
         } else {
             error("CONSTANT", this.token.lexeme);
         }
