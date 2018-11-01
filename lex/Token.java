@@ -12,8 +12,8 @@ package lex;
  * @author pedro
  */
 public class Token {
-    public final String tag;
-    public final String lexeme;
+    private final String tag;
+    private final String lexeme;
 
     public Token(String tag){
         this.tag = tag;

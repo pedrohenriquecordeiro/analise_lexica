@@ -25,38 +25,42 @@ public class Syntaxer {
         this.lexer = new Lexer(filename);
         this.token = this.lexer.scan();
     }
+    
+    public void begin() throws IOException{
+        program();
+    }
 
     void advance() throws IOException {
         this.token = this.lexer.scan();
+        System.out.println(this.token + "::" + this.lexer.getLine());
     }
 
-    void eat(String token_lexeme) throws IOException {
-        if (token.tag.equals(this.token.lexeme)) {
+    void eat(String tag) throws IOException {
+        if (this.token.getTag().equals(tag)) {
             advance();
         } else {
-            error(token_lexeme, this.token.lexeme);
+            error(tag, this.token.getTag());
         }
     }
 
     private void error(String token_expected, String token_gived) {
-        System.out.println("Expected : " + token_expected);
-        System.out.println("Gived    : " + token_gived);
+        System.out.println("ERROR - [line " + this.lexer.getLine() + "] :: < Expected:" + token_expected + " | Gived:" + token_gived + " >");
     }
 
     // ---------------------- productions -----------------------------------------------
     //program ::= start [decl-list] stmt-list exit
     void program() throws IOException {
-        if (this.token.lexeme.equals(Tag.START)) {
+        if (this.token.getTag().equals(Tag.START)) {
             eat(Tag.START);
-            if (this.token.lexeme.equals(Tag.INT)
-                    || this.token.lexeme.equals(Tag.FLOAT)
-                    || this.token.lexeme.equals(Tag.STRING)) {
+            if (this.token.getTag().equals(Tag.INT)
+                    || this.token.getTag().equals(Tag.FLOAT)
+                    || this.token.getTag().equals(Tag.STRING)) {
                 decl_list();
             }
             stmt_list();
-            eat(Tag.END);
+            eat(Tag.EXIT);
         } else {
-            error(Tag.START, this.token.lexeme);
+            error(Tag.START, this.token.getTag());
         }
     }
 
@@ -65,9 +69,9 @@ public class Syntaxer {
 
         do {
             decl();
-        } while (this.token.lexeme.equals(Tag.INT)
-                || this.token.lexeme.equals(Tag.FLOAT)
-                || this.token.lexeme.equals(Tag.STRING));
+        } while (this.token.getTag().equals(Tag.INT)
+                || this.token.getTag().equals(Tag.FLOAT)
+                || this.token.getTag().equals(Tag.STRING));
 
     }
 
@@ -81,7 +85,7 @@ public class Syntaxer {
     //ident-list ::= identifier {"," identifier}
     void ident_list() throws IOException {
         identifier();
-        while (this.token.lexeme.equals(Tag.COMMA)) {
+        while (this.token.getTag().equals(Tag.COMMA)) {
             eat(Tag.COMMA);
             identifier();
         }
@@ -89,14 +93,14 @@ public class Syntaxer {
 
     //type ::= int | float | string
     void type() throws IOException {
-        if (this.token.lexeme.equals(Tag.INT)) {
+        if (this.token.getTag().equals(Tag.INT)) {
             eat(Tag.INT);
-        } else if (this.token.lexeme.equals(Tag.FLOAT)) {
+        } else if (this.token.getTag().equals(Tag.FLOAT)) {
             eat(Tag.FLOAT);
-        } else if (this.token.lexeme.equals(Tag.STRING)) {
+        } else if (this.token.getTag().equals(Tag.STRING)) {
             eat(Tag.STRING);
         } else {
-            error(Tag.INT, this.token.lexeme);
+            error(Tag.INT, this.token.getTag());
         }
     }
 
@@ -104,31 +108,29 @@ public class Syntaxer {
     void stmt_list() throws IOException {
         do {
             stmt();
-        } while (this.token.lexeme.equals(Tag.IF)
-                || this.token.lexeme.equals(Tag.ID)
-                || this.token.lexeme.equals(Tag.WHILE)
-                || this.token.lexeme.equals(Tag.SCAN)
-                || this.token.lexeme.equals(Tag.PRINT));
+        } while (this.token.getTag().equals(Tag.IF)
+                || this.token.getTag().equals(Tag.ID)
+                || this.token.getTag().equals(Tag.WHILE)
+                || this.token.getTag().equals(Tag.SCAN)
+                || this.token.getTag().equals(Tag.PRINT));
     }
 
     //stmt ::= assign-stmt ";"  | if-stmt | while-stmt| read-stmt ";" | write-stmt ";"
     void stmt() throws IOException {
-        if (this.token.lexeme.equals(Tag.ID)) {
+        if (this.token.getTag().equals(Tag.ID)) {
             assign_stmt();
             eat(Tag.SEMICOLON);
-        } else if (this.token.lexeme.equals(Tag.IF)) {
+        } else if (this.token.getTag().equals(Tag.IF)) {
             if_stmt();
-        } else if (this.token.lexeme.equals(Tag.DO)) {
+        } else if (this.token.getTag().equals(Tag.DO)) {
             while_stmt();
-        } else if (this.token.lexeme.equals(Tag.SCAN)) {
+        } else if (this.token.getTag().equals(Tag.SCAN)) {
             read_stmt();
             eat(Tag.SEMICOLON);
-        } else if (this.token.lexeme.equals(Tag.PRINT)) {
+        } else if (this.token.getTag().equals(Tag.PRINT)) {
             write_stmt();
             eat(Tag.SEMICOLON);
-        } else {
-            error("stmt", this.token.lexeme);
-        }
+        } 
     }
 
     //assign-stmt ::= identifier "=" simple_expr
@@ -149,9 +151,9 @@ public class Syntaxer {
 
     //if-stmt-2 ::= end | else stmt-list end
     void if_stmt_2() throws IOException {
-        if (this.token.lexeme.equals(Tag.END)) {
+        if (this.token.getTag().equals(Tag.END)) {
             eat(Tag.END);
-        } else if (this.token.lexeme.equals(Tag.ELSE)) {
+        } else if (this.token.getTag().equals(Tag.ELSE)) {
             eat(Tag.ELSE);
             stmt_list();
             eat(Tag.END);
@@ -195,14 +197,14 @@ public class Syntaxer {
 
     //writable ::= simple-expr | literal
     void writable() throws IOException {
-        if (this.token.lexeme.equals(Tag.ID)
-                || this.token.lexeme.equals(Tag.FLOATING)
-                || this.token.lexeme.equals(Tag.INTEGER)
-                || this.token.lexeme.equals(Tag.OPEN_PAR)
-                || this.token.lexeme.equals(Tag.NOT)
-                || this.token.lexeme.equals(Tag.MINUS)) {
+        if (this.token.getTag().equals(Tag.ID)
+                || this.token.getTag().equals(Tag.FLOATING)
+                || this.token.getTag().equals(Tag.INTEGER)
+                || this.token.getTag().equals(Tag.OPEN_PAR)
+                || this.token.getTag().equals(Tag.NOT)
+                || this.token.getTag().equals(Tag.MINUS)) {
             simple_expr();
-        } else if (this.token.lexeme.equals(Tag.LITERAL)) {
+        } else if (this.token.getTag().equals(Tag.LITERAL)) {
             literal();
         }
     }
@@ -215,11 +217,12 @@ public class Syntaxer {
 
     //expression-2 ::= relop simple-expr | L
     void expression2() throws IOException {
-        if (this.token.lexeme.equals(Tag.DIFF)
-                || this.token.lexeme.equals(Tag.LESS_THAN)
-                || this.token.lexeme.equals(Tag.LESS_EQUAL)
-                || this.token.lexeme.equals(Tag.GREATHER_THAN)
-                || this.token.lexeme.equals(Tag.GREATHER_EQUAL)) {
+        if (this.token.getTag().equals(Tag.DIFF)
+                || this.token.getTag().equals(Tag.LESS_THAN)
+                || this.token.getTag().equals(Tag.LESS_EQUAL)
+                || this.token.getTag().equals(Tag.GREATHER_THAN)
+                || this.token.getTag().equals(Tag.GREATHER_EQUAL)
+                || this.token.getTag().equals(Tag.COMPARATION)) {
             relop();
             simple_expr();
         }
@@ -234,9 +237,9 @@ public class Syntaxer {
 
     //simple-expr-2 ::= addop term simple-expr-2 | L
     void simple_expr_2() throws IOException {
-        if (this.token.lexeme.equals(Tag.SUM)
-                || this.token.lexeme.equals(Tag.MINUS)
-                || this.token.lexeme.equals(Tag.OR)) {
+        if (this.token.getTag().equals(Tag.SUM)
+                || this.token.getTag().equals(Tag.MINUS)
+                || this.token.getTag().equals(Tag.OR)) {
             addop();
             term();
             simple_expr_2();
@@ -252,9 +255,9 @@ public class Syntaxer {
 
     //term-2 ::= mulop factor-a term-2 | L
     void term_2() throws IOException {
-        if (this.token.lexeme.equals(Tag.MULT)
-                || this.token.lexeme.equals(Tag.DIV)
-                || this.token.lexeme.equals(Tag.AND)) {
+        if (this.token.getTag().equals(Tag.MULT)
+                || this.token.getTag().equals(Tag.DIV)
+                || this.token.getTag().equals(Tag.AND)) {
             mulop();
             factor_a();
             term_2();
@@ -263,16 +266,16 @@ public class Syntaxer {
 
     //fator-a ::= factor | not factor | "-" factor
     void factor_a() throws IOException {
-        if (this.token.lexeme.equals(Tag.ID)
-                || this.token.lexeme.equals(Tag.FLOATING)
-                || this.token.lexeme.equals(Tag.INTEGER)
-                || this.token.lexeme.equals(Tag.LITERAL)
-                || this.token.lexeme.equals(Tag.OPEN_PAR)) {
+        if (this.token.getTag().equals(Tag.ID)
+                || this.token.getTag().equals(Tag.FLOATING)
+                || this.token.getTag().equals(Tag.INTEGER)
+                || this.token.getTag().equals(Tag.LITERAL)
+                || this.token.getTag().equals(Tag.OPEN_PAR)) {
             factor();
-        } else if (this.token.lexeme.equals(Tag.NOT)) {
+        } else if (this.token.getTag().equals(Tag.NOT)) {
             eat(Tag.NOT);
             factor();
-        } else if (this.token.lexeme.equals(Tag.MINUS)) {
+        } else if (this.token.getTag().equals(Tag.MINUS)) {
             eat(Tag.MINUS);
             factor();
         }
@@ -280,13 +283,13 @@ public class Syntaxer {
 
     //factor ::= identifier | constant | "(" expression ")"
     void factor() throws IOException {
-        if (this.token.lexeme.equals(Tag.ID)) {
+        if (this.token.getTag().equals(Tag.ID)) {
             identifier();
-        } else if (this.token.lexeme.equals(Tag.FLOATING)
-                || this.token.lexeme.equals(Tag.INTEGER)
-                || this.token.lexeme.equals(Tag.LITERAL)) {
+        } else if (this.token.getTag().equals(Tag.FLOATING)
+                || this.token.getTag().equals(Tag.INTEGER)
+                || this.token.getTag().equals(Tag.LITERAL)) {
             constant();
-        } else if (this.token.lexeme.equals(Tag.OPEN_PAR)) {
+        } else if (this.token.getTag().equals(Tag.OPEN_PAR)) {
             eat(Tag.OPEN_PAR);
             expression();
             eat(Tag.CLOSE_PAR);
@@ -295,96 +298,96 @@ public class Syntaxer {
 
     //relop ::= "==" | ">" | ">=" | "<" | "<=" | "<>"
     void relop() throws IOException {
-        if (this.token.lexeme.equals(Tag.COMPARATION)) {
-            relop();
-        } else if (this.token.lexeme.equals(Tag.GREATHER_EQUAL)) {
+        if (this.token.getTag().equals(Tag.COMPARATION)) {
+            eat(Tag.COMPARATION);
+        } else if (this.token.getTag().equals(Tag.GREATHER_EQUAL)) {
             eat(Tag.GREATHER_EQUAL);
-        } else if (this.token.lexeme.equals(Tag.GREATHER_THAN)) {
+        } else if (this.token.getTag().equals(Tag.GREATHER_THAN)) {
             eat(Tag.GREATHER_THAN);
-        } else if (this.token.lexeme.equals(Tag.LESS_EQUAL)) {
+        } else if (this.token.getTag().equals(Tag.LESS_EQUAL)) {
             eat(Tag.LESS_EQUAL);
-        } else if (this.token.lexeme.equals(Tag.LESS_THAN)) {
+        } else if (this.token.getTag().equals(Tag.LESS_THAN)) {
             eat(Tag.LESS_THAN);
-        } else if (this.token.lexeme.equals(Tag.DIFF)) {
+        } else if (this.token.getTag().equals(Tag.DIFF)) {
             eat(Tag.DIFF);
         } else {
-            error("relop", this.token.lexeme);
+            error("relop", this.token.getTag());
         }
 
     }
 
     //addop ::= "+" | "-" | or
     void addop() throws IOException {
-        if (this.token.lexeme.equals(Tag.SUM)) {
+        if (this.token.getTag().equals(Tag.SUM)) {
             eat(Tag.SUM);
-        } else if (this.token.lexeme.equals(Tag.MINUS)) {
+        } else if (this.token.getTag().equals(Tag.MINUS)) {
             eat(Tag.MINUS);
-        } else if (this.token.lexeme.equals(Tag.OR)) {
+        } else if (this.token.getTag().equals(Tag.OR)) {
             eat(Tag.OR);
         } else {
-            error("addop", this.token.lexeme);
+            error("addop", this.token.getTag());
         }
     }
 
     //mulop ::= "*" | "/" | and
     void mulop() throws IOException {
-        if (this.token.lexeme.equals(Tag.MULT)) {
+        if (this.token.getTag().equals(Tag.MULT)) {
             eat(Tag.MULT);
-        } else if (this.token.lexeme.equals(Tag.DIV)) {
+        } else if (this.token.getTag().equals(Tag.DIV)) {
             eat(Tag.DIV);
-        } else if (this.token.lexeme.equals(Tag.AND)) {
+        } else if (this.token.getTag().equals(Tag.AND)) {
             eat(Tag.AND);
         } else {
-            error("mulop", this.token.lexeme);
+            error("mulop", this.token.getTag());
         }
     }
 
     //constant ::= integer_const | float_const | literal
     void constant() throws IOException {
-        if (this.token.lexeme.equals(Tag.FLOATING)) {
+        if (this.token.getTag().equals(Tag.INTEGER)) {
             integer_const();
-        } else if (this.token.lexeme.equals(Tag.INTEGER)) {
+        } else if (this.token.getTag().equals(Tag.FLOATING)) {
             float_const();
-        } else if (this.token.lexeme.equals(Tag.LITERAL)) {
+        } else if (this.token.getTag().equals(Tag.LITERAL)) {
             literal();
         } else {
-            error("CONSTANT", this.token.lexeme);
+            error("CONSTANT", this.token.getTag());
         }
     }
 
     //integer_const ::= digit {digit}
     void integer_const() throws IOException {
-        if (this.token.lexeme.equals(Tag.INTEGER)) {
+        if (this.token.getTag().equals(Tag.INTEGER)) {
             eat(Tag.INTEGER);
         } else {
-            error(Tag.INTEGER, this.token.lexeme);
+            error(Tag.INTEGER, this.token.getTag());
         }
     }
 
     //float_const ::= digit{digit} “.”digit{digit}
     void float_const() throws IOException {
-        if (this.token.lexeme.equals(Tag.FLOATING)) {
+        if (this.token.getTag().equals(Tag.FLOATING)) {
             eat(Tag.FLOATING);
         } else {
-            error(Tag.FLOATING, this.token.lexeme);
+            error(Tag.FLOATING, this.token.getTag());
         }
     }
 
     //literal ::= " “" {caractere} "”"
     void literal() throws IOException {
-        if (this.token.lexeme.equals(Tag.LITERAL)) {
+        if (this.token.getTag().equals(Tag.LITERAL)) {
             eat(Tag.LITERAL);
         } else {
-            error(Tag.LITERAL, this.token.lexeme);
+            error(Tag.LITERAL, this.token.getTag());
         }
     }
 
     //identifier ::= letter {letter | digit }
     void identifier() throws IOException {
-        if (this.token.lexeme.equals(Tag.ID)) {
+        if (this.token.getTag().equals(Tag.ID)) {
             eat(Tag.ID);
         } else {
-            error(Tag.ID, this.token.lexeme);
+            error(Tag.ID, this.token.getTag());
         }
     }
 

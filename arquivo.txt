@@ -1,2 +1,17 @@
-a = a
-"a12q%"
+start
+int a,b;
+int result;
+float a,x,total;
+
+a = 2;
+x = 5.1;
+scan(b);
+scan(c);
+if (a==1) then
+    b = 2.4;
+    c = b + 1;
+end
+
+a = 1;
+
+exit

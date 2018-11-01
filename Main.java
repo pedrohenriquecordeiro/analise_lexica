@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import syntax.Syntaxer;
 
 /**
  *
@@ -37,6 +38,19 @@ public class Main {
             
             System.out.println("\n\nTABELA DE SIMBOLOS");
             lexer.getSymbolTable();
+            System.out.println("----------------\n\n");
+             
+        } catch (FileNotFoundException e1) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e1);
+        }catch(IOException e2){
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e2);  
+        }
+        
+        
+        try {
+            Syntaxer sintaxer = new Syntaxer("/home/pedro/Dropbox/7a period/Compiladores/Trabalho/primeira_parte/Lexeme/src/arquivo.txt");
+            sintaxer.begin();
+            
              
         } catch (FileNotFoundException e1) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e1);
