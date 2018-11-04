@@ -40,7 +40,24 @@ public class Symbol extends Token {
     public static final Symbol open_c          = new Symbol(Tag.OPEN_C        ,"{" );
     public static final Symbol close_c         = new Symbol(Tag.CLOSE_C       ,"}" );
     public static final Symbol comment         = new Symbol(Tag.COMMENT       ,"" );
-    
+
+    // palavras chave
+    public static final Symbol start           = new Symbol(Tag.START         ,"start" );
+    public static final Symbol exit            = new Symbol(Tag.EXIT          ,"exit" );
+    public static final Symbol int_type        = new Symbol(Tag.INT           ,"int" );
+    public static final Symbol float_type      = new Symbol(Tag.FLOAT         ,"float" );
+    public static final Symbol string_type     = new Symbol(Tag.STRING        ,"string" );
+    public static final Symbol if_cond         = new Symbol(Tag.IF            ,"if" );
+    public static final Symbol then_cond       = new Symbol(Tag.THEN          ,"then" );
+    public static final Symbol else_cond       = new Symbol(Tag.ELSE          ,"else" );
+    public static final Symbol do_cond         = new Symbol(Tag.DO            ,"do" );
+    public static final Symbol while_cond      = new Symbol(Tag.WHILE         ,"while" );
+    public static final Symbol scan            = new Symbol(Tag.SCAN          ,"scan" );
+    public static final Symbol print           = new Symbol(Tag.PRINT         ,"print" );
+    public static final Symbol not             = new Symbol(Tag.NOT           ,"not" );
+    public static final Symbol or              = new Symbol(Tag.OR            ,"or" );
+    public static final Symbol and             = new Symbol(Tag.AND           ,"and" );
+    public static final Symbol end             = new Symbol(Tag.END           ,"end" );
     
     public Symbol(String tag,String lexeme){
         super(tag);

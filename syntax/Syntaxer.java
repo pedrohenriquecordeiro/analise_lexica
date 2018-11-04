@@ -35,7 +35,7 @@ public class Syntaxer {
         if(this.token.getTag().equals(Tag.COMMENT)){
             advance();
         }
-        System.out.println(this.token + "::" + this.lexer.getLine());
+        //System.out.println(this.token + "::" + this.lexer.getLine());
     }
 
     void eat(String tag) throws IOException {
@@ -109,12 +109,14 @@ public class Syntaxer {
 
     //stmt-list ::= stmt {stmt}
     void stmt_list() throws IOException {
+
         do {
             stmt();
+            System.out.println("passei aqui no loop stmt_list()");
         } while (this.token.getTag().equals(Tag.IF)
                 || this.token.getTag().equals(Tag.ID)
                 || this.token.getTag().equals(Tag.WHILE)
-                || this.token.getTag().equals(Tag.SCAN)
+//                || this.token.getTag().equals(Tag.SCAN)
                 || this.token.getTag().equals(Tag.PRINT));
     }
 
@@ -168,18 +170,18 @@ public class Syntaxer {
         expression();
     }
 
-    //while-stmt ::= do stmt-list stmt-sufix
-    void while_stmt() throws IOException {
-        eat(Tag.DO);
-        stmt_list();
-        stmt_sufix();
-    }
-
     //stmt-sufix ::= while condition end
     void stmt_sufix() throws IOException {
         eat(Tag.WHILE);
         condition();
         eat(Tag.END);
+    }
+
+    //while-stmt ::= do stmt-list stmt-sufix
+    void while_stmt() throws IOException {
+        eat(Tag.DO);
+        stmt_list();
+        stmt_sufix();
     }
 
     //read-stmt ::= scan "(" identifier ")"
@@ -378,11 +380,13 @@ public class Syntaxer {
 
     //literal ::= " “" {caractere} "”"
     void literal() throws IOException {
+        //eat(Tag.QUOTE_RIGHT);
         if (this.token.getTag().equals(Tag.LITERAL)) {
             eat(Tag.LITERAL);
         } else {
             error(Tag.LITERAL, this.token.getTag());
         }
+        //eat(Tag.QUOTE_LEFT);
     }
 
     //identifier ::= letter {letter | digit }

@@ -8,18 +8,8 @@ package lex;
  * ele passa a apontar pro proximo char, e retornará esse char no comando read()
  */
 
-import java.util.Scanner;
-import lex.Env;
-import lex.Symbol;
-import lex.Tag;
-import lex.Token;
-import lex.IntegerNum;
-import lex.FloatNum;
-import lex.Word;
-import com.sun.xml.internal.ws.util.StringUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Hashtable;
@@ -36,15 +26,11 @@ public class Lexer {
     private RandomAccessFile randomAccessFile;
     StringBuffer stringBuffer;
 
-    private Scanner scanner;
-
     private Hashtable reserved_words = new Hashtable();
 
     private Env env;
 
     public Lexer(String fileName) throws FileNotFoundException, IOException {
-
-        this.scanner = new Scanner(new File(fileName));
 
         this.randomAccessFile = new RandomAccessFile(new File(fileName), "r");
         this.stringBuffer = new StringBuffer();
@@ -124,8 +110,8 @@ public class Lexer {
             case ',':
                 return Symbol.comma;
 
-            case '.':
-                return Symbol.dot;
+            //case '.':
+            //    return Symbol.dot;
 
             case '"':
                 long posicaoAtualPonteiro = this.randomAccessFile.getFilePointer();

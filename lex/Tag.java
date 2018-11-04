@@ -28,6 +28,11 @@ public class Tag {
             NOT             = "NOT",
             OR              = "OR",
             AND             = "AND",
+            // aspas
+            // “
+            QUOTE_RIGHT     = "“",
+            // ”
+            QUOTE_LEFT      = "”",
             //operadores
             // +
             SUM             = "SUM",
@@ -73,7 +78,7 @@ public class Tag {
             // token desconhecido
             UNKNOWN         = "UNKNOWN",
             COMMENT         = "COMMENT";
-    
+
     
             
 }

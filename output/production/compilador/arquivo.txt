@@ -1,16 +1,24 @@
 start
-int a, b;
-int result;
-float a,x,total;
-a = 2;
-x = 0.1;
-scan (b);
-scan (y)
-result = (a*b ++ 1) / 2;
-print "Resultado: ";
-print (result);
-print ("Total: ");
-total = y / x;
-print ("Total: ";
-print (total);
+ int a, b;
+
+ do
+    print("Teste 6");
+    a = (a + 1);
+    print("Valor de a: ");
+    print(a);
+
+    if ( (a>b) and (a>c) ) then
+        maior = a;
+
+    else
+        if (b>c) then
+            maior = b;
+
+        else
+         maior = c;
+        end
+    end
+
+ while(a <> 10)end
+
 exit
