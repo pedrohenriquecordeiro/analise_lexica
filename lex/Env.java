@@ -48,9 +48,9 @@ public class Env {
     
     public void showHashTable(){
         ArrayList<Word> arrayList = new ArrayList<Word>(this.table.values());
-        for(Word w  : arrayList){
-            System.out.println(w.getLexeme());
-        }
+//        for(Word w  : arrayList){
+//            System.out.println(w.getLexeme());
+//        }
     }
 
 }

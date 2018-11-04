@@ -8,6 +8,7 @@ package lex;
  * ele passa a apontar pro proximo char, e retornará esse char no comando read()
  */
 
+import java.util.Scanner;
 import lex.Env;
 import lex.Symbol;
 import lex.Tag;
@@ -29,18 +30,22 @@ import java.util.Hashtable;
  */
 public class Lexer {
 
-    public static int line = 1;
+    public int line = 1;
     private char ch = ' ';
     private char last_ch = ' ';
     private RandomAccessFile randomAccessFile;
     StringBuffer stringBuffer;
+
+    private Scanner scanner;
 
     private Hashtable reserved_words = new Hashtable();
 
     private Env env;
 
     public Lexer(String fileName) throws FileNotFoundException, IOException {
-        
+
+        this.scanner = new Scanner(new File(fileName));
+
         this.randomAccessFile = new RandomAccessFile(new File(fileName), "r");
         this.stringBuffer = new StringBuffer();
         this.env = new Env(null);
@@ -88,7 +93,7 @@ public class Lexer {
 
     public Token scan() throws IOException {
         int char_to_int = this.ch - '0';
-        
+
         //desconsidera delimitadores na entrada
         do {
             readch();

@@ -16,12 +16,12 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            Lexer lexer = new Lexer("/home/pedro/Dropbox/7a period/Compiladores/Trabalho/primeira_parte/Lexeme/src/arquivo.txt");
-            
+            Lexer lexer = new Lexer("./arquivo.txt");
+
             Token token;
             String lexeme,tag;
             int numero_token = 0;
-            
+
             do{
                 numero_token++;
                 if(numero_token >= 300){
@@ -31,33 +31,31 @@ public class Main {
                 token = lexer.scan();
                 // retorna a tag
                 tag = token.getTag();
-                System.out.println( tag + "< " + token.getLexeme() + " >");
-                
-                
+                //System.out.println( tag + "< " + token.getLexeme() + " >");
             }while(!tag.equals("EXIT") );
-            
-            System.out.println("\n\nTABELA DE SIMBOLOS");
+
+            //System.out.println("\n\nTABELA DE SIMBOLOS");
             lexer.getSymbolTable();
-            System.out.println("----------------\n\n");
-             
+            //System.out.println("----------------\n\n");
+
         } catch (FileNotFoundException e1) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e1);
         }catch(IOException e2){
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e2);  
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e2);
         }
-        
-        
+
+
         try {
-            Syntaxer sintaxer = new Syntaxer("/home/pedro/Dropbox/7a period/Compiladores/Trabalho/primeira_parte/Lexeme/src/arquivo.txt");
+            Syntaxer sintaxer = new Syntaxer("./arquivo.txt");
             sintaxer.begin();
-            
-             
+
+
         } catch (FileNotFoundException e1) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e1);
         }catch(IOException e2){
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e2);  
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e2);
         }
-        
+
     }
-    
+
 }
