@@ -25,7 +25,7 @@ public class Syntaxer {
         this.lexer = new Lexer(filename);
         this.token = this.lexer.scan();
     }
-    
+
     public void begin() throws IOException{
         program();
     }
@@ -112,11 +112,11 @@ public class Syntaxer {
 
         do {
             stmt();
-            System.out.println("passei aqui no loop stmt_list()");
+//            System.out.println("passei aqui no loop stmt_list()");
         } while (this.token.getTag().equals(Tag.IF)
                 || this.token.getTag().equals(Tag.ID)
-                || this.token.getTag().equals(Tag.WHILE)
-//                || this.token.getTag().equals(Tag.SCAN)
+//                || this.token.getTag().equals(Tag.WHILE)
+                || this.token.getTag().equals(Tag.SCAN)
                 || this.token.getTag().equals(Tag.PRINT));
     }
 
@@ -135,7 +135,7 @@ public class Syntaxer {
         } else if (this.token.getTag().equals(Tag.PRINT)) {
             write_stmt();
             eat(Tag.SEMICOLON);
-        } 
+        }
     }
 
     //assign-stmt ::= identifier "=" simple_expr
